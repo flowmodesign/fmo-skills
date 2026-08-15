@@ -495,13 +495,25 @@ run. Knowing the vocabulary tells you what to ask for, and what to hand over.
 
 ## Triggers, and their options
 
-`load` (`delay`) - `click` (`reverseOnClickOutside`) - `hover` - `focus` -
-`scroll-reveal` (`viewport`) - `scroll-scrub` (`start`, `end`, `startOffset`,
-`endOffset`) - `mouse-position` (`axis`, `scope`) - `form-submit`
-(`preventDefault`) - `resize` (`mode`, `minWidth`, `maxWidth`, `debounce`) -
-`page-unload` (`delay`, `prevent`) - `swipe` (`direction`, `threshold`,
-`reverse`) - `drag` (`axis`, `mapToProgress`, `bounds`, `inertia`) -
-`follow-mouse` (`smooth`, `scope`) - `scroll-inertia` (`scrollInertia`).
+Fifteen, and this is the complete set.
+
+| Trigger | Options |
+| --- | --- |
+| `load` | `delay` |
+| `click` | `reverseOnClickOutside` |
+| `hover` | none |
+| `focus` | none |
+| `scroll-reveal` | `viewport`, `once`, `start`, `startOffset`, `threshold` |
+| `scroll-scrub` | `start`, `end`, `startOffset`, `endOffset`, `scrub`, `pin`, `pinTarget`, `pinSpacing`, `anticipatePin` |
+| `scroll-inertia` | `scrollInertia` (`smoothing`, `strength`) |
+| `mouse-position` | `axis` (`x`/`y`/`both`), `scope` (`element`/`window`), `smooth`, `distance`, `onlyOnHold`, `fromCurrentPosition`, `keepAtLastLocation` |
+| `follow-mouse` | the same pointer family - it runs a RAF follow loop rather than scrubbing progress |
+| `mouse-rotate` | `rotateDirection` (`cw`/`ccw`/`both`), `scope` |
+| `swipe` | `direction` (`up`/`down`/`left`/`right`), `threshold`, `reverse` |
+| `drag` | `axis`, `mapToProgress`, `bounds` (selector or `{minX,maxX,minY,maxY}`), `inertia` (`strength`, `bounce`, `snapGrid`), `collideEdges`, `maxTravel`, `travelDirection` |
+| `resize` | `mode` (`range`/`every`), `minWidth`, `maxWidth`, `debounce` |
+| `page-unload` | `delay`, `prevent` |
+| `form-submit` | `preventDefault` |
 
 Every trigger also takes `groupSelector` (key animations per ancestor match),
 `animationTarget` (animate something other than the trigger), `instanceScope`

@@ -18,7 +18,7 @@ Inspect before editing with **`read_animations`**; change in place with **`updat
 - Entry shape: `{ "method":"from"|"to"|"fromTo"|"set", "target":".sel", "vars":{…}, "position"?:"+=0.2"|"<"|">" }`.
 - Durations in **seconds**; GSAP ease names (`"power3.out"`, `"back.out(1.7)"`, `"none"`).
 - **Stagger** = `vars.stagger` (number, or `{ each, from:"center"|… }`). **Text split** = `vars.splitText:"chars"|"words"|"lines"` (+ `vars.splitMask`). No special tool — author them inline.
-- **Triggers:** `load | click | hover | focus | scroll-reveal | scroll-scrub | scroll-inertia | mouse-position`.
+- **Triggers (all 15):** `load | click | hover | focus | scroll-reveal | scroll-scrub | scroll-inertia | mouse-position | follow-mouse | mouse-rotate | swipe | drag | resize | page-unload | form-submit`. Each takes its own `trigger_config` keys — pointer ones share `{ axis, scope, smooth, distance }`, `swipe` takes `{ direction, threshold }`, `drag` takes `{ axis, bounds, inertia, mapToProgress }`, `resize` takes `{ mode, minWidth, maxWidth, debounce }`. The tool description lists the full set per trigger.
 
 ### Scroll the GSAP-native way
 Put `scrollTrigger:{ start, end, scrub, pin }` directly inside a tween's `vars` (exactly like real GSAP) — the engine LIFTS it into the f0 trigger and infers the type (has `scrub` → scroll-scrub; no `scrub` → scroll-reveal). Embed `scrollTrigger` **OR** set `trigger_type`+`trigger_config`, never both for the same value.
