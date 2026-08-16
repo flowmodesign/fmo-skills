@@ -20,7 +20,13 @@ format Claude Code and Claude Desktop read.
 
 **Automatically.** The flowmo desktop app installs these for you: open
 *Connect to Claude* and it writes them into `~/.claude/skills/` along with the
-MCP server registration. Reconnect after an app update to refresh them.
+MCP server registration. Once connected they refresh on their own whenever you
+update the app, so a skill added in a later release arrives without you doing
+anything.
+
+If you connected with an older build, that automatic refresh did not exist yet -
+the skills you have are the ones from the day you clicked Connect. Click
+*Connect to Claude* once more (or use the manual route below) to catch up.
 
 **Manually.** Clone into your Claude skills directory:
 
