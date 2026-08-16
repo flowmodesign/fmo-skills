@@ -22,8 +22,16 @@ finds out by noticing something missing.
 1. **There is no `<head>`.** It is discarded on import. `<link rel="stylesheet">`,
    `<script src="...">` and CSS `@import` are recorded, warned about, and never
    loaded.
-2. **Tokens and `ds-*` are the vocabulary.** Never Tailwind or Bootstrap - neither
-   exists in the imported page. Never a `var()` fallback.
+2. **Tokens and `ds-*` are the vocabulary, and this is the rule that gets broken
+   most.** A `ds-` class is ALREADY STYLED and already themed: it tracks the
+   project's design system, so swapping the system restyles it, and editing the
+   class once updates every instance. A class you invent has none of that - you
+   have written a private one-off that no theme reaches, and the page stops
+   being a design system and becomes a pile of bespoke CSS. Compose the real
+   classes first and add your own ONLY for what the vocabulary genuinely does
+   not cover. Never Tailwind or Bootstrap - neither exists in the imported page.
+   Never invent a `ds-` name: it has nothing behind it and it looks official,
+   which is worse than a plain class. Never a `var()` fallback.
 3. **Base IS desktop.** Step DOWN with `max-width` at 1279 / 1023 / 767 and nothing
    else. A `min-width` below 1440px is DROPPED, block and all.
 4. **Only three GSAP shapes convert**, and only with a recognised trigger.
@@ -69,6 +77,44 @@ Other things worth knowing before you write:
 - **Give meaningful elements a `data-name`.** It becomes the layer name.
 - **Do not use engine-internal class names** (`page`, `text`, `rect`, `image`,
   `fmod`).
+
+## What is already on the page before your CSS runs
+
+A global sheet ships with EVERY preview, export and publish, injected before
+anything you write. Nothing in it uses `!important`, so an ordinary rule of
+yours beats it - but you have to know it is there, because several of its rules
+are the opposite of browser defaults:
+
+- **`* { box-sizing: border-box; margin: 0; font-size: inherit; text-decoration:
+  none; }`** - no default margins anywhere, and font-size INHERITS rather than
+  stepping down per tag.
+- **`h1..h6 { font-weight: inherit; }`** - a bare heading is **NOT BOLD**. This
+  matches the editor canvas (which renders under Tailwind preflight) and it is
+  the single most surprising rule here. Use `ds-heading-*` / `ds-display`, or set
+  a weight yourself; do not assume the UA default.
+- **`img, video { max-width: unset; object-fit: cover; object-position: center;
+  }`** - media fills and crops by default rather than letterboxing.
+- **`input, button, select, textarea`** are stripped to nothing: no border, no
+  outline, transparent background, inherited colour, `cursor: pointer` on
+  buttons, no resize on textareas, no native select arrow. Style them with
+  `ds-input` / `ds-button` or your own rules - there is no UA chrome to remove.
+- **`summary { list-style: none }`** plus the webkit marker removed - the native
+  `<details>` triangle is gone, so supply your own chevron.
+- **`[data-f0-id] { position: relative; min-width: 0; }`** on every element.
+- **`.page` / `.f0-page`** are `display: grid; width: 100vw; min-height: 900px;`
+  with the body font.
+- **`a`** inherits the body font family and carries no underline (the `*` rule).
+- **`.desktop-hide` / `.tablet-hide` / `.mobile-hide`** already work as container
+  queries at the 1280 / 768-1279 / 767 bands. Use them instead of writing your
+  own hide-at-width rules. (`ds-mobile-hide` and friends are the design-system
+  aliases.)
+- The closed **`f0-*` layout vocabulary** (`f0-container`, `f0-stack`, `f0-row`,
+  `f0-grid`, `f0-gap-*`, `f0-between`, `f0-center`, `f0-fill`, `f0-hug`) ships
+  too, and so does the CSS that makes carousels, tabs and accordions lay out
+  (section 6).
+
+So: do not write your own reset, do not re-zero margins, and do not fight these
+with `!important`. Assume a clean slate that is *more* neutral than a browser's.
 
 ---
 
@@ -130,9 +176,14 @@ small/medium/large), `card` (default/elevated/outlined), `input` (default/error)
 **Typography:** `ds-display`, `ds-heading-1..6`,
 `ds-text-body|small|caption|sm|lg`, `ds-overline`, `ds-eyebrow`.
 
-**Compound (structure only):** `ds-tag`; `ds-accordion` / `-item` / `-trigger` /
+**Compound, and STYLING ONLY:** `ds-tag`; `ds-accordion` / `-item` / `-trigger` /
 `-content`; `ds-carousel` / `-wrapper` / `-container` / `-slide`; `ds-tabs` /
 `-container` / `-trigger` / `-content`; `ds-dropdown` / `-trigger` / `-menu`.
+
+**These do not move.** They are the LOOK of a carousel / tabs / accordion and
+nothing else - no runtime is attached to a `ds-` class, ever. A carousel built
+from `ds-carousel` alone renders as a static row of slides and then just sits
+there. Behaviour comes from a bound interaction; see section 6.
 
 **Utilities:** `ds-image-frame`, `ds-section-dark`, `ds-glass`,
 `ds-text-gradient`, `ds-gradient-orb`, `ds-blob`, `ds-divider`,
@@ -546,6 +597,56 @@ runs verbatim, but it arrives as a script, not as an editable f0 timeline.
 **For all of those, carry the native payload instead** (below). It is imported
 as authored - every animation type, `timeline` included - rather than inferred,
 so nothing has to be guessable from a tween.
+
+## Carousels, tabs and accordions need a BOUND INTERACTION
+
+This is the most common "I built it and it does nothing" case, so it is worth
+being blunt: **markup alone never moves.** There is no CSS-only carousel and no
+class you can add that starts a runtime.
+
+What the controller does when a `carousel` interaction is bound to a container:
+
+- It STAMPS the runtime classes itself - `f0-carousel`, plus `f0-carousel-h` or
+  `-v` for the axis, or `f0-carousel-fade` for the fade variant, and `f0-slide`
+  on each direct child. **You do not write these**, and writing them by hand
+  without an interaction just gets you the layout with no behaviour.
+- It manages `f0-active` / `f0-prev` / `f0-next` on the slides as state changes.
+- It reads `--f0-visible` and `--f0-gap` for track metrics and translates the
+  SLIDES (never the clipping container).
+
+What YOU write: a container whose DIRECT CHILDREN are the slides, plus whatever
+nav elements you want, each with a stable class you can point the config at.
+
+```json
+{
+  "id": "hero-carousel",
+  "name": "Hero carousel",
+  "trigger": { "type": "load", "target": ".hero-carousel" },
+  "animation": {
+    "type": "carousel",
+    "definition": {
+      "target": "trigger",
+      "transitionType": "slide",
+      "transitionDuration": 400,
+      "loop": true,
+      "autoPlay": true,
+      "autoPlayDelay": 4000,
+      "pauseOnHover": true,
+      "prevSelector": ".carousel-prev",
+      "nextSelector": ".carousel-next",
+      "bulletSelector": ".carousel-dots"
+    }
+  }
+}
+```
+
+Tabs run on the same controller (`fade` variant, panels as the direct children);
+accordions use `f0-accordion-panel`, which ships with `overflow: hidden` so a
+height animation clips correctly. `f0-tab` ships with `cursor: pointer`.
+
+Inside flowmo you would bind this with the carousel preset. In a HANDOFF FILE,
+put the definition in the interactions payload below - that is the only way a
+dropped file arrives with a working carousel.
 
 ## The native payload: authored in, authored out
 
