@@ -74,11 +74,22 @@ interactions payload.
 
 ## What is lost, and what is kept
 
-- `duration`, `delay`, `ease` and `stagger` are lifted into playback. **Everything
-  else left in vars becomes the keyframes.** The control keys `onComplete`,
-  `onStart`, `paused`, `repeat` and `yoyo` are STRIPPED - **a converted tween
-  cannot repeat or yoyo.** If the loop is the point, write a timeline and accept
-  that it stays uneditable.
+- `duration`, `delay`, `ease`, `stagger`, `repeat` and `yoyo` are lifted into
+  playback. **Everything else left in vars becomes the keyframes.**
+- **A looping tween converts.** `repeat` becomes f0's `loop` and `yoyo` becomes
+  `alternate`, so a float, a pulse or a breathing orb stays an editable
+  interaction - do NOT reach for a timeline just to get a loop, because that
+  sinks the whole effect as opaque code. `repeat: -1` is infinite; a positive
+  count is kept as a count. `yoyo` needs a `repeat` beside it to mean anything.
+
+  ```html
+  <script>
+    gsap.to('.orb', { y: -12, duration: 2, repeat: -1, yoyo: true,
+                      ease: 'sine.inOut', scrollTrigger: { trigger: '.orb' } });
+  </script>
+  ```
+- The callback keys `onComplete`, `onStart` and `paused` are still stripped -
+  there is nowhere for a function to live in a declarative interaction.
 - `delay: i * 0.2` inside a loop is promoted to a real stagger; `stagger: 0.1`
   converts directly.
 - `gsap.timeline()`, `ScrollTrigger.create()` and hand-written scroll listeners
