@@ -3,8 +3,9 @@
 Skills that teach Claude how to build for [flowmo](https://flowmo.ai) (f0) - the
 live visual web/video editor.
 
-Each directory is one skill: a single `SKILL.md` with YAML frontmatter, the
-format Claude Code and Claude Desktop read.
+Each directory is one skill: a `SKILL.md` with YAML frontmatter, plus any small
+scripts the skill explicitly invokes. Claude Code and Claude Desktop read this
+format and preserve the neighboring resources when installing the skill.
 
 | Skill | What it covers |
 | --- | --- |

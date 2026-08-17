@@ -1,11 +1,17 @@
 ---
 name: flowmo-frontend-design
-description: Design and edit pages/sections in flowmo (f0) on its design-system foundation. Use when writing or changing HTML/CSS for an f0 project — which classes/tokens to use, which CSS tool writes what (build vs update_stylesheet vs apply_class_styles vs apply_styles), and how to structure a page. Prevents the two big failure modes: inventing arbitrary classes/Tailwind, and inlining hardcoded styles.
+description: Design and edit pages/sections in flowmo (f0) on its design-system foundation. Use for live HTML/CSS editing and, together with flowmo-authoring-contract, for HTML files intended for f0 Import page or drag-and-drop.
 ---
 
 # flowmo frontend design
 
 **Always call `f0_design_system` first** — it returns the live cornerstone classes, `var()` tokens, and the CSS-tool decision table for THIS project. The notes below are the durable rules.
+
+When the output is a file for **Import page** or drag-and-drop rather than a live
+canvas edit, also load **flowmo-authoring-contract** and follow its file-handoff
+representation rules. Do not put layout or copy inside JavaScript. If the file
+contains motion, native interactions, or code elements, run the bundled handoff
+validator on the exact final file before delivering it.
 
 ## Cornerstones, not a cage
 flowmo's `ds-*` classes + `var(--token)` tokens are the **load-bearing foundation**. Build every page on them:

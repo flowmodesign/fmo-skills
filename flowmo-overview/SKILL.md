@@ -1,11 +1,23 @@
 ---
 name: flowmo-overview
-description: How to operate flowmo (f0) — the live visual web/video editor — through the f0 MCP server. Use this whenever you are inspecting, designing, or editing an f0 project: the tool map, working style, what to call before writing HTML/CSS, token-saving, and model routing. Start here, then load flowmo-frontend-design / flowmo-interactive-design / flowmo-motion-design for the specifics.
+description: How to operate flowmo (f0) through the live editor and how to route editable HTML import/drop handoffs to the separate authoring contract. Use whenever inspecting, designing, editing, or preparing a page for f0.
 ---
 
 # Operating flowmo (f0)
 
 f0 is a **live** visual editor. You inspect and drive the *running* canvas through the `f0` MCP server — you are editing a real project a user has open, not generating a static file.
+
+## Stop and route file handoffs correctly
+
+If the deliverable is an HTML/DESIGN.md file the user will drag, drop, or import
+into f0, load **flowmo-authoring-contract** before authoring it. That contract is
+mandatory even when this overview or the frontend/motion skills are already
+loaded. Live-editor tool syntax is not the dropped-file grammar.
+
+An editable handoff must remain selectable DOM with native interactions. Do not
+replace it with Electron capture, an iframe, a live sandbox, or one opaque script
+unless the user explicitly asks for a faithful non-editable embed. Run the
+authoring contract's validator on the exact final file before delivery.
 
 ## Golden path for any task
 1. `f0_health` — confirm the app is reachable and see open project tabs.

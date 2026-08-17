@@ -1,0 +1,312 @@
+#!/usr/bin/env node
+
+import fs from 'node:fs';
+import path from 'node:path';
+
+function fail(message) {
+  console.error(`f0 editable-motion handoff validation failed: ${message}`);
+  process.exit(1);
+}
+
+function collectDomSignatures(html) {
+  const ids = new Set();
+  const classes = new Set();
+  const attributes = new Map();
+  const withoutScripts = html.replace(/<script\b[\s\S]*?<\/script\s*>/gi, '');
+  for (const tag of withoutScripts.matchAll(/<[a-z][^>]*>/gi)) {
+    const source = tag[0];
+    for (const attribute of source.matchAll(/\b([:\w-]+)(?:\s*=\s*(["'])(.*?)\2)?/g)) {
+      const name = attribute[1].toLowerCase();
+      const value = attribute[3] ?? '';
+      if (!attributes.has(name)) attributes.set(name, new Set());
+      attributes.get(name).add(value);
+      if (name === 'id' && value) ids.add(value);
+      if (name === 'class') {
+        for (const className of value.split(/\s+/).filter(Boolean)) classes.add(className);
+      }
+    }
+  }
+  return { ids, classes, attributes };
+}
+
+function selectorExists(selector, signatures) {
+  const sentinels = new Set(['trigger', 'self', 'parent', 'children', 'window', 'document']);
+  if (!selector || sentinels.has(selector)) return true;
+  return selector.split(',').some((branch) => {
+    const ids = [...branch.matchAll(/#([\w-]+)/g)].map((match) => match[1]);
+    const classes = [...branch.matchAll(/\.([\w-]+)/g)].map((match) => match[1]);
+    const attrs = [...branch.matchAll(/\[([:\w-]+)(?:\s*=\s*(["']?)([^\]"']+)\2)?\]/g)];
+    if (!ids.length && !classes.length && !attrs.length) return true;
+    return ids.every((id) => signatures.ids.has(id))
+      && classes.every((className) => signatures.classes.has(className))
+      && attrs.every((match) => {
+        const values = signatures.attributes.get(match[1].toLowerCase());
+        return values && (match[3] === undefined || values.has(match[3]));
+      });
+  });
+}
+
+function collectSelectors(value, selectors, pathParts = []) {
+  if (!value || typeof value !== 'object') return;
+  if (Array.isArray(value)) {
+    value.forEach((item, index) => collectSelectors(item, selectors, [...pathParts, String(index)]));
+    return;
+  }
+  for (const [key, child] of Object.entries(value)) {
+    const childPath = [...pathParts, key];
+    if (
+      typeof child === 'string'
+      && (/selector$/i.test(key) || ['target', 'animationTarget', 'rootSelector'].includes(key))
+    ) {
+      selectors.push({ selector: child, path: childPath.join('.') });
+    }
+    collectSelectors(child, selectors, childPath);
+  }
+}
+
+function matchingParen(source, open) {
+  let depth = 0;
+  let quote = '';
+  let escaped = false;
+  for (let index = open; index < source.length; index++) {
+    const char = source[index];
+    if (quote) {
+      if (escaped) escaped = false;
+      else if (char === '\\') escaped = true;
+      else if (char === quote) quote = '';
+      continue;
+    }
+    if (char === '"' || char === "'" || char === '`') { quote = char; continue; }
+    if (char === '(') depth++;
+    else if (char === ')' && --depth === 0) return index;
+  }
+  return -1;
+}
+
+function splitArgs(source) {
+  const parts = [];
+  let start = 0;
+  let round = 0;
+  let square = 0;
+  let curly = 0;
+  let quote = '';
+  let escaped = false;
+  for (let index = 0; index < source.length; index++) {
+    const char = source[index];
+    if (quote) {
+      if (escaped) escaped = false;
+      else if (char === '\\') escaped = true;
+      else if (char === quote) quote = '';
+      continue;
+    }
+    if (char === '"' || char === "'" || char === '`') { quote = char; continue; }
+    if (char === '(') round++;
+    else if (char === ')') round--;
+    else if (char === '[') square++;
+    else if (char === ']') square--;
+    else if (char === '{') curly++;
+    else if (char === '}') curly--;
+    else if (char === ',' && round === 0 && square === 0 && curly === 0) {
+      parts.push(source.slice(start, index).trim());
+      start = index + 1;
+    }
+  }
+  parts.push(source.slice(start).trim());
+  return parts;
+}
+
+function blankRange(source, start, end) {
+  return source.slice(0, start)
+    + source.slice(start, end).replace(/[^\r\n]/g, ' ')
+    + source.slice(end);
+}
+
+/**
+ * Conservative, dependency-free check for the importer-safe direct GSAP form.
+ * It intentionally accepts less than f0 (not more): advanced motion belongs in
+ * the native payload, where there is no ambiguity or opaque code fallback.
+ */
+function validateClassicScript(source) {
+  const forbidden = [
+    [/\bgsap\s*\.\s*timeline\s*\(/, 'gsap.timeline()'],
+    [/\bScrollTrigger\s*\./, 'imperative ScrollTrigger API'],
+    [/\bdocument\s*\./, 'DOM query/access'],
+    [/\bwindow\s*\./, 'window measurement/access'],
+    [/\b(?:if|else|for|while|switch|try|catch|function)\b/, 'control flow or helper function'],
+    [/=>/, 'callback/function value'],
+    [/\b(?:const|let|var)\b/, 'variable setup'],
+    [/\b(?:keyframes|onUpdate|onStart|onComplete|pin|pinSpacing)\s*:/, 'unsupported GSAP vars'],
+  ];
+  for (const [pattern, reason] of forbidden) {
+    if (pattern.test(source)) return { ok: false, reason };
+  }
+
+  let residue = source;
+  const ranges = [];
+  const callPattern = /gsap\s*\.\s*(fromTo|from|to)\s*\(/g;
+  let match;
+  while ((match = callPattern.exec(source))) {
+    const open = match.index + match[0].length - 1;
+    const close = matchingParen(source, open);
+    if (close === -1) return { ok: false, reason: 'unbalanced GSAP call' };
+    const args = splitArgs(source.slice(open + 1, close));
+    const expectedArgs = match[1] === 'fromTo' ? 3 : 2;
+    if (args.length !== expectedArgs) return { ok: false, reason: `gsap.${match[1]}() argument shape` };
+    if (!/^(?:'[^']*'|"[^"]*")$/.test(args[0])) {
+      return { ok: false, reason: `gsap.${match[1]}() target is not a literal selector` };
+    }
+    for (const vars of args.slice(1)) {
+      if (!vars.startsWith('{') || !vars.endsWith('}')) {
+        return { ok: false, reason: `gsap.${match[1]}() vars are not object literals` };
+      }
+    }
+    let end = close + 1;
+    while (/\s/.test(source[end] || '')) end++;
+    if (source[end] === ';') end++;
+    ranges.push([match.index, end]);
+    callPattern.lastIndex = close + 1;
+  }
+  if (!ranges.length) return { ok: false, reason: 'arbitrary executable inline JavaScript' };
+
+  const registerPattern = /gsap\s*\.\s*registerPlugin\s*\(/g;
+  while ((match = registerPattern.exec(source))) {
+    const open = match.index + match[0].length - 1;
+    const close = matchingParen(source, open);
+    if (close === -1) return { ok: false, reason: 'unbalanced registerPlugin call' };
+    let end = close + 1;
+    while (/\s/.test(source[end] || '')) end++;
+    if (source[end] === ';') end++;
+    ranges.push([match.index, end]);
+    registerPattern.lastIndex = close + 1;
+  }
+  for (const [start, end] of ranges.sort((a, b) => b[0] - a[0])) {
+    residue = blankRange(residue, start, end);
+  }
+  residue = residue
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/\/\/[^\r\n]*/g, '')
+    .replace(/[\s;]/g, '');
+  return residue ? { ok: false, reason: 'mixed supported and unsupported statements' } : { ok: true };
+}
+
+const sourcePath = process.argv[2];
+if (!sourcePath) fail('pass the HTML file path as the first argument');
+const absolutePath = path.resolve(sourcePath);
+const html = fs.readFileSync(absolutePath, 'utf8');
+const domSignatures = collectDomSignatures(html);
+const errors = [];
+const nativeSelectors = [];
+let editableGsapBlocks = 0;
+let nativeInteractions = 0;
+let nativeTimelines = 0;
+
+const scriptPattern = /<script\b([^>]*)>([\s\S]*?)<\/script\s*>/gi;
+let scriptMatch;
+let scriptIndex = 0;
+while ((scriptMatch = scriptPattern.exec(html))) {
+  scriptIndex++;
+  const attributes = scriptMatch[1];
+  const code = scriptMatch[2].trim();
+  if (!code || /\bsrc\s*=/.test(attributes)) continue;
+  const type = attributes.match(/\btype\s*=\s*(["'])(.*?)\1/i)?.[2]?.trim().toLowerCase() || '';
+  const isNative = /\bdata-f0-interactions\b/i.test(attributes);
+  if (isNative) {
+    if (type !== 'application/json') {
+      errors.push(`script ${scriptIndex}: data-f0-interactions must use type="application/json"`);
+      continue;
+    }
+    let payload;
+    try { payload = JSON.parse(code); }
+    catch (error) {
+      errors.push(`script ${scriptIndex}: native payload is not valid JSON (${String(error)})`);
+      continue;
+    }
+    const interactions = Array.isArray(payload?.interactions) ? payload.interactions : [];
+    const timelines = payload?.timelines && typeof payload.timelines === 'object' ? payload.timelines : {};
+    if (!Array.isArray(payload?.interactions)) {
+      errors.push(`script ${scriptIndex}: native payload interactions must be an array`);
+    }
+    if (!payload?.timelines || typeof payload.timelines !== 'object' || Array.isArray(payload.timelines)) {
+      errors.push(`script ${scriptIndex}: native payload timelines must be an object map`);
+    }
+    nativeInteractions += interactions.length;
+    nativeTimelines += Object.keys(timelines).length;
+    const ids = new Set();
+    for (const [interactionIndex, interaction] of interactions.entries()) {
+      const label = `script ${scriptIndex}, interaction ${interactionIndex + 1}`;
+      if (!interaction || typeof interaction !== 'object') {
+        errors.push(`${label}: interaction must be an object`);
+        continue;
+      }
+      if (typeof interaction.id !== 'string' || !interaction.id.trim()) {
+        errors.push(`${label}: id is required`);
+      } else if (ids.has(interaction.id)) {
+        errors.push(`${label}: duplicate id ${interaction.id}`);
+      } else ids.add(interaction.id);
+      if (typeof interaction.name !== 'string' || !interaction.name.trim()) {
+        errors.push(`${label}: name is required`);
+      }
+      if (typeof interaction.trigger?.type !== 'string') {
+        errors.push(`${label}: trigger.type is required`);
+      }
+      if (typeof interaction.animation?.type !== 'string' || !interaction.animation?.definition) {
+        errors.push(`${label}: animation.type and animation.definition are required`);
+      }
+      if (interaction?.animation?.type !== 'timeline') continue;
+      const timelineId = interaction.animation.definition?.timelineId;
+      if (typeof timelineId !== 'string' || !Object.hasOwn(timelines, timelineId)) {
+        errors.push(`script ${scriptIndex}: timeline interaction references missing timeline ${String(timelineId)}`);
+      }
+    }
+    for (const [timelineKey, timeline] of Object.entries(timelines)) {
+      const label = `script ${scriptIndex}, timeline ${timelineKey}`;
+      if (!timeline || typeof timeline !== 'object') {
+        errors.push(`${label}: timeline must be an object`);
+        continue;
+      }
+      if (typeof timeline.id !== 'string' || timeline.id !== timelineKey) {
+        errors.push(`${label}: timeline.id must equal its map key`);
+      }
+      if (!Array.isArray(timeline.layers) || timeline.layers.length === 0) {
+        errors.push(`${label}: at least one layer is required`);
+        continue;
+      }
+      for (const [layerIndex, layer] of timeline.layers.entries()) {
+        if (!Array.isArray(layer?.tracks) || layer.tracks.length === 0) {
+          errors.push(`${label}, layer ${layerIndex + 1}: at least one track is required`);
+          continue;
+        }
+        for (const [trackIndex, track] of layer.tracks.entries()) {
+          if (!Array.isArray(track?.keyframes) || track.keyframes.length === 0) {
+            errors.push(`${label}, layer ${layerIndex + 1}, track ${trackIndex + 1}: keyframes are required`);
+          }
+        }
+      }
+    }
+    collectSelectors(payload, nativeSelectors, [`script ${scriptIndex}`]);
+    continue;
+  }
+  if (type === 'application/ld+json' || type === 'text/f0-tsx') continue;
+  const result = validateClassicScript(code);
+  if (result.ok) editableGsapBlocks++;
+  else errors.push(
+    `script ${scriptIndex}: ${result.reason}. This would import as an opaque code element; `
+    + 'use atomic literal-selector GSAP or data-f0-interactions.',
+  );
+}
+
+for (const { selector, path: selectorPath } of nativeSelectors) {
+  if (!selectorExists(selector, domSignatures)) {
+    errors.push(`${selectorPath}: selector ${JSON.stringify(selector)} does not match the handoff HTML`);
+  }
+}
+
+if (errors.length) {
+  console.error(`f0 editable-motion handoff validation failed for ${absolutePath}`);
+  for (const error of errors) console.error(`- ${error}`);
+  process.exit(1);
+}
+console.log(
+  `f0 editable-motion handoff valid: ${editableGsapBlocks} editable GSAP block(s), `
+  + `${nativeInteractions} native interaction(s), ${nativeTimelines} native timeline(s)`,
+);

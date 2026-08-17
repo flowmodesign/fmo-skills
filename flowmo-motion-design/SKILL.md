@@ -1,11 +1,18 @@
 ---
 name: flowmo-motion-design
-description: Author web motion in flowmo (f0) — reveals, fades, slides, staggers, text reveals, scroll-scrub, parallax, pinned scroll stories, and carousel/tabs/accordion components. Use for any "animate / motion / scroll / parallax / interactive" request on a website. Covers the author_animation GSAP tool, triggers, the motion recipe catalog, and the .f0-* component conventions.
+description: Author web motion in flowmo (f0) and route importable HTML motion through the stricter editable-handoff contract. Use for animate, motion, scroll, parallax, interactions, and files intended for f0 Import page or drag-and-drop.
 ---
 
 # flowmo motion design
 
-**Core rule: you write plain GSAP; the engine translates.** You never pick "simple vs timeline" — the converter decides (one selector + one tween → simple; multi-tween/sequenced/multi-target/`set` → timeline). A finished page is never static.
+**Live-editor core rule:** with `author_animation`, you supply GSAP-shaped JSON
+entries and the engine translates them. You never pick "simple vs timeline" —
+the live tool decides (one selector + one tween → simple;
+multi-tween/sequenced/multi-target/`set` → timeline). A finished page is never
+static.
+
+This rule applies to the live tool only. It does **not** mean a dropped HTML file
+can contain arbitrary GSAP and become editable.
 
 ## Route by what the thing IS
 1. **MOTION (the default)** — reveals, fades, slides, scroll-scrub, parallax, text reveals, staggers, hover/click tweens, choreography → **`author_animation`**.
@@ -39,8 +46,21 @@ Put `scrollTrigger:{ start, end, scrub, pin }` directly inside a tween's `vars` 
 - **Accordion** (`variant "single"(default)|"multi"`): `.f0-accordion-item` wraps each row; `.f0-accordion-trigger` is the clickable header; `.f0-accordion-panel` is the collapsible body.
 - **Reveals (repeating items):** `.f0-reveal` on each child (for a staggered `author_animation`, not a component preset).
 
-## Importing existing GSAP / HTML (don't hand-author here)
-If you're bringing in an **external** site/snippet (someone else's HTML+CSS+GSAP, a scraped page, a Figma/template export) rather than authoring motion natively, f0's importer auto-converts a constrained subset of GSAP/ScrollTrigger/Lottie into native interactions. Author the source in that subset (inline `<script>` `gsap.from/to/fromTo`, string selectors, `scrollTrigger` in vars, `data-f0-lottie` divs, `data-f0-*-scrub` markers — no timelines/DOM-refs/function-valued vars) or it gets dropped. Read the full conventions with **`f0_guide` topic `import`** before preparing or handing off importable code.
+## Importing existing GSAP / HTML (mandatory separate contract)
+
+For an HTML file intended for **Import page** or drag-and-drop, load
+**flowmo-authoring-contract** and read its motion reference before writing or
+repairing motion. The importer converts only atomic direct
+`gsap.from/to/fromTo` calls with literal selectors and literal vars. Unsupported
+classic scripts are preserved as opaque page-code elements; they are not native
+motion and must not be described as a successful editable import.
+
+Use the inert native `data-f0-interactions` payload for timelines, pinning,
+responsive branches, DOM measurements/refs, callbacks, computed ranges,
+carousels, tabs, accordions, and advanced triggers. Use declarative
+`data-f0-*-scrub` markers for media. Never use a live sandbox as a workaround
+when editability is the point. Run the authoring contract's validator on the
+exact final file and fix every failure before handoff.
 
 ## FOUC / preview rules (tell the user)
 - Never write `opacity:0` / `display:none` into persistent CSS on animated elements — let the runtime own starting state.

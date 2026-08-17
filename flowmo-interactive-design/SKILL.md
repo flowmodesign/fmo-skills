@@ -1,11 +1,18 @@
 ---
 name: flowmo-interactive-design
-description: Build and attach interactive code elements (React/WebGL/canvas/Three.js/particles) in flowmo (f0). Use when adding scripted/generative behavior — particle heroes, 3D, data viz, parallax, carousels-as-code. Covers create_interactive_element vs attach_interactive_to_element, the critical scope/isolation rule, and the TSX authoring contract that keeps content selectable.
+description: Build and attach interactive code elements (React/WebGL/canvas/Three.js/particles) in flowmo (f0), including safe text/f0-tsx handoffs for Import page. Covers live tools, scope/isolation, and keeping content selectable.
 ---
 
 # flowmo interactive design
 
 Interactive elements compile author-supplied **TSX** into a live React component mounted inside a real f0 host element (`data-f0-id`). Their state/effects are isolated; CSS is scoped to the host; real f0 children pass through as `{children}` and stay selectable.
+
+For a file the user will drag, drop, or import, also load
+**flowmo-authoring-contract** and read its interactive-code reference. Encode the
+component in an inert `<script type="text/f0-tsx">` block. Never use an ordinary
+classic script to construct the page or attach global DOM behavior: it becomes
+opaque page code, not an editable interactive element. Run the handoff validator
+on the exact final HTML before delivery.
 
 ## Native engine FIRST — don't reach for code
 Use the **native engine** (via `f0_invoke`) for: mobile menus, tabs, accordions, modals, drawers, sticky headers, dropdowns, click/hover UI, carousels, reveals. See **flowmo-motion-design** for the `.f0-tabs`/`.f0-carousel`/`.f0-accordion` component presets and GSAP.
