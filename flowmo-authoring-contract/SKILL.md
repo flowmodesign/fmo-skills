@@ -40,8 +40,15 @@ handoff:
 | Editable content and layout | Ordinary semantic HTML plus inline CSS |
 | Simple load/reveal/scrub/hover/click tween | One atomic, converter-safe GSAP block with literal CSS selectors |
 | Timeline, pinning, responsive branches, DOM measurements/refs, callbacks, computed ranges, carousel, tabs, accordion, or advanced triggers | Inert `<script type="application/json" data-f0-interactions>` native payload |
+| Scroll-driven mp4, image sequence, or Lottie | Declarative `data-f0-*-scrub` attributes on the media element - NO script and no payload entry |
 | Canvas, WebGL, particles, or a genuinely code-driven element | Inert `<script type="text/f0-tsx">` interactive element; keep editable copy in HTML |
 | Faithful execution of an arbitrary existing site | Live sandbox, but only when the user explicitly accepts one opaque embed |
+
+A scroll-scrubbed video or image sequence is the cinematic-scroll primitive and
+it is DECLARATIVE. Reaching for a canvas, a TSX element, a hand-written
+`ScrollTrigger`, or a timeline that writes `currentTime` is the wrong route: it
+converts to nothing, ships as opaque code, and throws away an effect the runtime
+already implements. Mark the element instead - see the motion reference.
 
 Do not confuse the live-editor `author_animation` syntax with the HTML importer
 grammar. The live tool accepts full native authoring operations. A dropped HTML
@@ -83,6 +90,8 @@ behavior visually.
   interaction references a timeline included in that payload.
 - Scripted visuals use `text/f0-tsx`, remain scoped to their own host, and do not
   own copy that should remain editable.
+- Scroll-driven mp4 / image-sequence / Lottie use the `data-f0-*-scrub` markers,
+  never a script that writes `currentTime` or swaps frames.
 - Every selector and asset path resolves in the final handoff location; keep
   relative assets beside the HTML instead of silently changing paths.
 - Reduced-motion behavior is declarative and does not wrap converter-safe GSAP

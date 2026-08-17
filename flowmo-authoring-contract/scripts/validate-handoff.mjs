@@ -301,6 +301,19 @@ for (const { selector, path: selectorPath } of nativeSelectors) {
   }
 }
 
+/**
+ * Declarative media scrub is the THIRD channel that produces interactions on
+ * import, alongside converter-safe GSAP and the native payload. It needs no
+ * script, so nothing above sees it - and reporting "0 interactions" for a page
+ * whose scrub markers are perfectly fine reads as "my markers were ignored",
+ * which is exactly the doubt that pushes an author back to a canvas or a
+ * hand-written ScrollTrigger. Counted, not validated: the import warns on a
+ * marker with no source.
+ */
+const scrubMarkers = (html.match(
+  /\bdata-f0-(?:video|image-sequence|lottie)-scrub\b/gi,
+) || []).length;
+
 if (errors.length) {
   console.error(`f0 editable-motion handoff validation failed for ${absolutePath}`);
   for (const error of errors) console.error(`- ${error}`);
@@ -308,5 +321,6 @@ if (errors.length) {
 }
 console.log(
   `f0 editable-motion handoff valid: ${editableGsapBlocks} editable GSAP block(s), `
-  + `${nativeInteractions} native interaction(s), ${nativeTimelines} native timeline(s)`,
+  + `${nativeInteractions} native interaction(s), ${nativeTimelines} native timeline(s), `
+  + `${scrubMarkers} declarative media scrub(s)`,
 );

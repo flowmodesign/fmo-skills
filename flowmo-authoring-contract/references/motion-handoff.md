@@ -75,6 +75,19 @@ interactions payload for pinned choreography.
 
 ## Media scrub is DECLARATIVE - mark the element, write no script
 
+**Reach for this whenever scroll position should drive a video, a frame
+sequence, or a Lottie.** It is the primitive behind the "cinematic scroll" look
+- a product shot rotating as you scroll, a hero clip advancing frame by frame,
+an exploded diagram assembling. If the brief says scrub / frame-by-frame /
+scroll-driven footage / "video that plays as you scroll", this is the answer,
+and it is two attributes.
+
+What NOT to do, because all three convert to nothing and ship as opaque code:
+
+- a `<canvas>` or TSX element that paints frames itself,
+- a hand-written `ScrollTrigger` whose `onUpdate` sets `video.currentTime`,
+- a GSAP timeline tweening a `currentTime` proxy object.
+
 There is no analyzable GSAP idiom for `video.currentTime = ...` or
 `lottie.loadAnimation(...)` driven by a ScrollTrigger, so media scrub is wired by
 **attributes on the element** instead. Opt in with the marker (bare attribute,
@@ -106,6 +119,44 @@ There is no analyzable GSAP idiom for `video.currentTime = ...` or
   component.
 - A media element WITHOUT a marker just plays or loops as normal. The marker is
   the only opt-in.
+
+### mp4 specifics
+
+- `muted` and `playsinline` are required in practice: without them mobile
+  browsers refuse inline playback and hand you a fullscreen player instead.
+- Add `preload="auto"`. Scrubbing seeks, and a video with no buffered data
+  cannot seek smoothly - this is the usual cause of a scrub that "sticks" on
+  first scroll.
+- Practical encoding note, not a product rule: seeking lands on keyframes, so
+  footage authored with a dense keyframe interval scrubs smoothly and a
+  long-GOP export judders. If a clip must scrub frame-accurately, an image
+  sequence is the more reliable choice than an mp4.
+- Host at a stable, CORS-accessible URL. The same applies to sequence frames.
+
+### Choosing between mp4 and an image sequence
+
+- mp4: one request, far smaller, right for longer or full-bleed footage where
+  exact frame landing does not matter.
+- Image sequence: every frame is its own image, so it lands exactly and never
+  judders, at the cost of many requests and much more weight. Right for short,
+  precise, product-turntable style sequences.
+
+### When the scrub is part of a bigger timeline
+
+The markers wire a self-contained scroll-scrub. If the media has to advance as
+one track inside a larger choreography, drop the marker and put it in the
+native payload instead, as a `simple` animation on a `scroll-scrub` trigger with
+`playback: { "duration": 1, "ease": "none" }` and one of these keyframe shapes:
+
+```json
+{ "mediaControl": { "kind": "video", "action": "scrub" } }
+{ "mediaControl": { "kind": "lottie", "path": "https://cdn/hero.json",
+                    "renderer": "svg", "startPercent": 0, "endPercent": 100 } }
+{ "imageSequence": { "frames": ["/seq/1.jpg", "/seq/2.jpg"], "fit": "cover" } }
+```
+
+Use the markers by default - they are shorter and they survive editing better.
+Reach for the payload only when the media is genuinely one layer of a timeline.
 
 ## SVG draw, morph and motion path
 
