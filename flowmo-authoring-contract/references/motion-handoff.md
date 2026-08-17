@@ -43,11 +43,34 @@ arrays, and one nested `scrollTrigger: {}`. No function values, no computed keys
 no template-literal interpolation. Use GSAP property shorthand (`x`, `y`, `scale`,
 `rotation`, `opacity`).
 
-`scrollTrigger` may contain literal `trigger`, `start`, `end`, and `scrub`.
-`pin`, `pinSpacing`, `onUpdate`, numeric ranges computed from layout, DOM-node
-targets, and keyframe objects are not part of this import grammar. Use CSS
-`position: sticky` plus literal scroll-scrub tweens, or carry a native f0
-interactions payload for pinned choreography.
+`scrollTrigger` may contain literal `trigger`, `start`, `end`, `scrub`, `once`,
+and the pinning keys `pin`, `pinSpacing` and `anticipatePin`. All of them are
+carried into the native trigger, so a pinned scroll story authored as one
+scrubbed tween arrives pinned:
+
+```html
+<script>
+  gsap.to('.panel', {
+    xPercent: -300, ease: 'none',
+    scrollTrigger: { trigger: '.stage', start: 'top top', end: 'bottom top',
+                     scrub: true, pin: true }
+  });
+</script>
+```
+
+Two details worth getting right, because both change the feel:
+
+- **`scrub: true` and `scrub: <number>` are different.** `true` locks progress
+  1:1 to scroll; a number is catch-up smoothing in SECONDS (`scrub: 1` is the
+  usual buttery default). Both are carried; pick deliberately.
+- **`start` is kept on a reveal too**, not only on a scrub. `start: 'top 80%'`
+  on a non-scrubbed `scrollTrigger` is honoured rather than falling back to the
+  default threshold, and `once: true` is carried with it.
+
+`pin` may be `true` or a selector; a selector becomes the pin target. What is
+still outside the grammar: `onUpdate` and other callbacks, ranges computed from
+layout, DOM-node targets, and keyframe objects. Those need the native f0
+interactions payload.
 
 ## What is lost, and what is kept
 

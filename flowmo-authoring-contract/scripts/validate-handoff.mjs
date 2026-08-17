@@ -135,7 +135,12 @@ function validateClassicScript(source) {
     [/\b(?:if|else|for|while|switch|try|catch|function)\b/, 'control flow or helper function'],
     [/=>/, 'callback/function value'],
     [/\b(?:const|let|var)\b/, 'variable setup'],
-    [/\b(?:keyframes|onUpdate|onStart|onComplete|pin|pinSpacing)\s*:/, 'unsupported GSAP vars'],
+    // `pin` / `pinSpacing` / `anticipatePin` were listed here because the
+    // importer used to drop them. It now carries them into the native
+    // trigger, so rejecting them sends authors to the payload for a pinned
+    // scroll story the atomic form handles - a false failure is as costly
+    // here as a missed one, because this gate is mandatory.
+    [/\b(?:keyframes|onUpdate|onStart|onComplete|onLeave|onEnter|onToggle|snap)\s*:/, 'unsupported GSAP vars'],
   ];
   for (const [pattern, reason] of forbidden) {
     if (pattern.test(source)) return { ok: false, reason };
