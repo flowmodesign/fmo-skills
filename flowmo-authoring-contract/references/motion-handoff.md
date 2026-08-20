@@ -405,6 +405,16 @@ interactions - not reconstructed, not approximated:
 
 - `type="application/json"` is inert by spec, so it never executes and is never
   re-attached as a script. This is the form to author.
+- **A timeline's `rootSelector` must be the element that CONTAINS everything the
+  timeline moves - never the page, never `body`.** The timeline panel derives its
+  layers from the subtree under that root, so a page-level root hands the user a
+  timeline scoped to the whole document instead of the section they animated. Point
+  it at the nearest wrapper that holds every moving element: for a hero timeline
+  moving `.hero-title` and `.hero-cta`, that is the `.hero` section. It may be
+  nested as deep as you like. If a timeline moves elements from two different
+  sections, that is a sign it should be TWO timelines, one rooted in each.
+  (The import repairs an obviously-wrong root where it can, and reports when it
+  cannot - do not rely on that, author it correctly.)
 - A `timeline` interaction references its timeline by `animation.definition.timelineId`;
   put the `TimelineDefinition` in the `timelines` map under that id. **A timeline
   interaction whose timeline is missing is dropped** - a dangling reference
