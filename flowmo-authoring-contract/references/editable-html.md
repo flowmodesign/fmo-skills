@@ -46,6 +46,10 @@ Other things worth knowing before you write:
 - **Give meaningful elements a `data-name`.** It becomes the layer name.
 - **Do not use engine-internal class names** (`page`, `text`, `rect`, `image`,
   `fmod`).
+- **Classes are the hook for everything - CSS, GSAP targets, triggers, scrub
+  markers, timeline roots and scope selectors.** Ids are for anchors, form
+  wiring and SVG internal references only. See "CSS rules the pipeline
+  enforces".
 
 ## What is already on the page before your CSS runs
 
@@ -327,6 +331,17 @@ Fluid first; a breakpoint is for when fluid is not enough.
 
 ## CSS rules the pipeline enforces
 
+- **Style by CLASS. Never use an `id` as a styling hook.** No `#hero { ... }`,
+  no `id="hero"` written so a rule can find it. An id is unique per document, so
+  an id-keyed rule binds ONE element: duplicate the card, reuse the section, or
+  let the user copy a band on the canvas and the copy is unstyled - and the page
+  now has a duplicate id, which is invalid. Classes are also the unit f0's own
+  class-level style editing works on, so an id rule is a rule the user cannot
+  edit the normal way. The only ids you write are the ones something genuinely
+  needs to address programmatically: an in-page anchor target (`href="#pricing"`),
+  form wiring (`<label for>`, `aria-labelledby`, `aria-controls`), and SVG
+  internal references (gradients, `clipPath`, `mask`, `filter`, `<use>`), which
+  can only be referenced by id. Those ids carry no styles.
 - **Never `!important`.** f0's per-element rules already out-specify class rules,
   and writing a selector replaces its rule wholesale, so there is nothing to fight.
   If a style "won't take", a more specific rule is shadowing it.

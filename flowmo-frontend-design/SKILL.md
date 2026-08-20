@@ -43,6 +43,7 @@ You **may** add NEW custom classes and NEW `:root` `--vars` — but only as ADDI
 - **Complex selectors on EXISTING elements → `update_stylesheet`.** It supports descendant/pseudo/`:nth-child`/`@media` and creates rules. But the selectors MUST match elements already on the canvas. A "0 rules applied / no selectors match" result means the class isn't on any element yet — add the class (below), don't give up and inline.
 - **One simple shared class → `apply_class_styles`** (`class_name` + `css` + `element_ids`). Single class only — it cannot express descendant/pseudo/`:nth-child`.
 - **One element, one-off properties → `apply_styles`** (inline, element-scoped, no selectors).
+- **Every selector is a CLASS selector — never style by `id`.** No `#hero { … }`, and never add an `id` so a rule can find an element. An id matches one element ever, so an id rule dies the moment the section is duplicated, and the duplicate is invalid HTML. Class rules are also the only ones the class-level tools above can edit. Write an `id` only where something must be addressed programmatically: an in-page anchor target (`href="#pricing"`), form wiring (`<label for>`, `aria-labelledby`, `aria-controls`), and SVG internal references (gradients, `clipPath`, `mask`, `filter`, `<use>`) which cannot be referenced any other way. Those ids carry no styles.
 
 ## Page structure
 - Page root is the only element that may carry a viewport-width px value. Inner containers use relative sizing (`%`, `auto`, `max-width`, `ds-container`).

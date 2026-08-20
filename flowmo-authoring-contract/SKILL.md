@@ -38,7 +38,7 @@ handoff:
 | Intended result | Representation in the handoff |
 | --- | --- |
 | Editable content and layout | Ordinary semantic HTML plus inline CSS |
-| Simple load/reveal/scrub/hover/click tween | One atomic, converter-safe GSAP block with literal CSS selectors |
+| Simple load/reveal/scrub/hover/click tween | One atomic, converter-safe GSAP block with literal CSS CLASS selectors |
 | Timeline, pinning, responsive branches, DOM measurements/refs, callbacks, computed ranges, carousel, tabs, accordion, or advanced triggers | Inert `<script type="application/json" data-f0-interactions>` native payload |
 | Scroll-driven mp4, image sequence, or Lottie | Declarative `data-f0-*-scrub` attributes on the media element - NO script and no payload entry |
 | Canvas, WebGL, particles, or a genuinely code-driven element | Inert `<script type="text/f0-tsx">` interactive element; keep editable copy in HTML |
@@ -54,6 +54,15 @@ Do not confuse the live-editor `author_animation` syntax with the HTML importer
 grammar. The live tool accepts full native authoring operations. A dropped HTML
 file only converts the narrow atomic GSAP subset described in the motion
 reference; complex motion belongs in the native JSON payload.
+
+Every hook in the handoff is a CLASS. CSS rules, GSAP targets, triggers, scrub
+markers, timeline roots and scope selectors all address elements by class, never
+by `id`. An id matches one element ever, so an id hook breaks the moment the user
+duplicates the section, and two copies of it are invalid HTML. Write an `id` only
+where something must be addressed programmatically and precisely - an in-page
+anchor target, form wiring (`for` / `aria-labelledby` / `aria-controls`), and SVG
+internal references (gradients, `clipPath`, `mask`, `filter`, `<use>`) which have
+no class equivalent. Those ids never carry styles or animation.
 
 Import routing is atomic per classic `<script>` block. One DOM query, helper,
 timeline, callback, conditional, or unsupported statement can route the entire
@@ -74,6 +83,12 @@ A failing result means the editable handoff is not ready. Fix the artifact and
 rerun the validator. Never dismiss a failure by switching to the live-sandbox
 route when the user asked for an editable page.
 
+The validator also WARNS (without failing) on any id used as a styling or
+animation hook - a `#id` CSS rule, a `#id` GSAP target, a `#id` in the native
+payload. The import accepts those, which is why they are not a gate failure, but
+a warning means the handoff is not written the way f0 is edited: clear them
+before delivery.
+
 The validator is intentionally conservative: it rejects ambiguous classic
 scripts that the product could preserve only as opaque code. It validates the
 editable-motion boundary; also inspect layout, assets, copy, and responsive
@@ -86,6 +101,8 @@ behavior visually.
 - There are no unsupported classic scripts and no accidental page-code layers.
 - Direct GSAP blocks contain only supported calls, literal selectors, and plain
   literal vars.
+- Every CSS rule and every animation selector targets a class. The only ids in
+  the file are anchor targets, form wiring, and SVG internal references.
 - Complex behavior is encoded in `data-f0-interactions`; every timeline
   interaction references a timeline included in that payload.
 - Scripted visuals use `text/f0-tsx`, remain scoped to their own host, and do not

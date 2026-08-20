@@ -200,7 +200,9 @@ const absolutePath = path.resolve(sourcePath);
 const html = fs.readFileSync(absolutePath, 'utf8');
 const domSignatures = collectDomSignatures(html);
 const errors = [];
+const warnings = [];
 const nativeSelectors = [];
+const classicScripts = [];
 let editableGsapBlocks = 0;
 let nativeInteractions = 0;
 let nativeTimelines = 0;
@@ -292,6 +294,7 @@ while ((scriptMatch = scriptPattern.exec(html))) {
     continue;
   }
   if (type === 'application/ld+json' || type === 'text/f0-tsx') continue;
+  classicScripts.push({ index: scriptIndex, code });
   const result = validateClassicScript(code);
   if (result.ok) editableGsapBlocks++;
   else errors.push(
@@ -307,6 +310,58 @@ for (const { selector, path: selectorPath } of nativeSelectors) {
 }
 
 /**
+ * Ids are not styling or animation hooks. An id matches ONE element, so an
+ * id-keyed rule or tween binds a single node and breaks the moment the user
+ * duplicates that section on the canvas - and the duplicate id is invalid HTML.
+ * Class rules are also the only ones f0's class-level style editing can touch.
+ * This is a WARNING, not a gate failure: the import converts an id selector
+ * happily, so failing here would reject files the product accepts. Anchor
+ * targets, form wiring and SVG internal references legitimately carry ids -
+ * they just never appear as a selector, which is what this looks at.
+ */
+const ID_SELECTOR = /#[A-Za-z_][\w-]*/;
+
+for (const { selector, path: selectorPath } of nativeSelectors) {
+  if (ID_SELECTOR.test(selector)) {
+    warnings.push(
+      `${selectorPath}: selector ${JSON.stringify(selector)} targets an id. `
+      + 'Hook motion on a class instead.',
+    );
+  }
+}
+
+for (const { index, code } of classicScripts) {
+  const quoted = code.match(/(['"])#[A-Za-z_][\w-]*(?:[^'"\n]*)?\1/g) || [];
+  for (const target of new Set(quoted)) {
+    warnings.push(
+      `script ${index}: GSAP target ${target} is an id selector. `
+      + 'Put a class on the element and animate that.',
+    );
+  }
+}
+
+const stylePattern = /<style\b[^>]*>([\s\S]*?)<\/style\s*>/gi;
+let styleMatch;
+let styleIndex = 0;
+while ((styleMatch = stylePattern.exec(html))) {
+  styleIndex++;
+  const idRules = new Set();
+  // Selector text only - the part before each `{`, so a `#fff` colour value in
+  // a declaration is never mistaken for an id selector.
+  for (const block of styleMatch[1].replace(/\/\*[\s\S]*?\*\//g, '').split('}')) {
+    const selectorText = block.split('{')[0];
+    if (!selectorText || !block.includes('{')) continue;
+    for (const part of selectorText.split(',')) {
+      const trimmed = part.trim();
+      if (trimmed && !trimmed.startsWith('@') && ID_SELECTOR.test(trimmed)) idRules.add(trimmed);
+    }
+  }
+  for (const rule of idRules) {
+    warnings.push(`style ${styleIndex}: rule \`${rule}\` styles by id. Style a class instead.`);
+  }
+}
+
+/**
  * Declarative media scrub is the THIRD channel that produces interactions on
  * import, alongside converter-safe GSAP and the native payload. It needs no
  * script, so nothing above sees it - and reporting "0 interactions" for a page
@@ -318,6 +373,11 @@ for (const { selector, path: selectorPath } of nativeSelectors) {
 const scrubMarkers = (html.match(
   /\bdata-f0-(?:video|image-sequence|lottie)-scrub\b/gi,
 ) || []).length;
+
+if (warnings.length) {
+  console.error(`f0 handoff warnings (classes, not ids) for ${absolutePath}`);
+  for (const warning of warnings) console.error(`- ${warning}`);
+}
 
 if (errors.length) {
   console.error(`f0 editable-motion handoff validation failed for ${absolutePath}`);

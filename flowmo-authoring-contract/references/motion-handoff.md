@@ -26,7 +26,12 @@ scroll math in a block you label convertible.
 1. The call is `gsap.to`, `gsap.from` or `gsap.fromTo` - **not**
    `gsap.timeline()`.
 2. The target is a **CSS selector string** (`'.hero-title'`). No DOM refs,
-   variables, arrays, query helpers, or loops.
+   variables, arrays, query helpers, or loops. **Always a CLASS selector, never
+   an id** - `'.hero-title'`, not `'#hero-title'`. An id matches one element
+   ever, so the tween dies the moment that section is duplicated or reused, and
+   a duplicated id is invalid HTML. This holds for every selector in the
+   handoff: targets, `scrollTrigger.trigger`, `pin`, `bounds`, scrub triggers,
+   timeline `rootSelector` and scope selectors.
 3. The trigger is one of:
    - no wrapper and no `scrollTrigger`, which becomes an on-load animation;
    - `scrollTrigger: { trigger, start, end, scrub? }` inside the tween's vars -
@@ -210,7 +215,7 @@ syntax:
 
   // Follow a path, scrubbed
   gsap.to('.ball', {
-    motionPath: { path: '#curve', autoRotate: true, start: 0, end: 1 },
+    motionPath: { path: '.curve-path', autoRotate: true, start: 0, end: 1 },
     ease: 'none',
     scrollTrigger: { trigger: '.path-section', start: 'top center', end: 'bottom center', scrub: true }
   });
@@ -240,6 +245,11 @@ user then has to live with in the layer tree.
   calls in a classic script block.
 - Animate only selectors that exist in the final HTML. A tween pointed at
   nothing fails silently at runtime.
+- Target classes, not ids. `gsap.to('#cta', ...)` converts, but it hands the
+  user an animation that binds a single element and breaks on duplication. Put
+  a class on the element and animate that. The one place an id still appears is
+  inside SVG, where a `clipPath` / `mask` / gradient can only be referenced by
+  id - that is a paint reference, not an animation hook.
 - `gsap.from` sets the start state at run time. Do not compensate with persistent
   `opacity: 0` or `display: none`, which can strand content when motion is off.
 - Do not wrap converter-safe GSAP in `window.matchMedia`, `gsap.matchMedia`, or
@@ -439,6 +449,9 @@ ACTUAL final file with the bundled conservative mirror of the importer rules:
 node /absolute/path/to/flowmo-authoring-contract/scripts/validate-handoff.mjs \
   /absolute/path/to/page.html
 ```
+
+It warns, without failing, on any id used as a hook - `#id` CSS rules, `#id`
+GSAP targets, `#id` selectors in the payload. Clear those before handing over.
 
 This is a release gate, not an optional lint. Do not claim the file will import
 as editable motion unless the command exits successfully. The validator is

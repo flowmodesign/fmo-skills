@@ -61,6 +61,9 @@ personality and drive both targets.
 ## The cornerstone rule (see flowmo-frontend-design)
 flowmo's `ds-*` classes + `var(--token)` design tokens are the **cornerstones** — build every page ON them. You MAY add custom classes/vars, but only as ADDITIVE extensions that compose with `ds-*` and still consume tokens. Never use Tailwind/Bootstrap. Never hardcode a value that has a matching token. Never inline a whole design as hardcoded styles to dodge a tool.
 
+## Classes, not ids
+Every hook is a **class**: CSS rules, GSAP/animation targets, scroll triggers, scope selectors, component classes. Never style or animate through an `id`, and never add an `id` just so a rule or tween can find an element — an id matches one element ever, so it breaks the moment a section is duplicated or a component reused, and the duplicate is invalid HTML. Class rules are also the only ones f0's class-level style tools can edit. Write an `id` only where something must be addressed programmatically and exactly: in-page anchor targets (`href="#pricing"`), form wiring (`<label for>`, `aria-labelledby`, `aria-controls`), and SVG internal references (gradients, `clipPath`, `mask`, `filter`, `<use>`), which have no class equivalent. Those ids carry no styles and no motion.
+
 ## Save tokens
 - Read narrowly: inspect a specific element (`f0_get_html`/`get_element_context` with an id), not the whole page, unless you truly need the full tree. Avoid `get_canvas_state` with `include_html` unless necessary.
 - Results from `f0_design_system` and `f0_screenshot` are compact by design. Don't re-fetch the design system each turn.

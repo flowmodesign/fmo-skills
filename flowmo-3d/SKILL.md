@@ -22,7 +22,7 @@ Available in BOTH the website editor (f0) and video mode (flowMotion). Verify vi
 - **`camera`** — real camera; first one auto-activates. `addCamera`, `setActiveCamera` (""=default free view), `setCamera`.
 - **`instancer`** — particle system OR replicator (see below).
 - **`group`** — hierarchy container / null object; parent nodes into it and animate as a turntable rig.
-- **`html`** — HTML (CSS selector or inline markup) rendered onto a mesh as a high-fidelity texture (`setHtmlSource`).
+- **`html`** — HTML (CSS selector or inline markup) rendered onto a mesh as a high-fidelity texture (`setHtmlSource`). Point the selector at a **class**, never an `id`.
 - **`shaderLayer`** — full-bleed 2D shader plane (background/overlay); author GLSL with `set_shader_material`.
 - **`effector`** — interactive driver (see Effectors).
 
