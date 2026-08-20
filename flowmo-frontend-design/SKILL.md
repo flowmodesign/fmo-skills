@@ -21,6 +21,15 @@ flowmo's `ds-*` classes + `var(--token)` tokens are the **load-bearing foundatio
 - **Repeated elements:** reuse element-type classes (`ds-feature-card`, `ds-list-item`, `ds-nav-link`, `ds-card-title`, `ds-card-description`) so editing one updates all — don't stack utilities on each.
 - **Values:** use `var(--color-*)`, `var(--spacing-*)`, `var(--radius-*)`, `var(--shadow-*)`, `var(--text-size-*)`, `var(--font-*)` for anything with a matching token.
 
+### The system covers video and motion too
+The same token set drives a WEB master and a VIDEO master, and both carry real
+motion. Two consequences when you build a page: the `--ease-*` / `--transition-*`
+tokens are the system's motion personality - use them instead of inventing a
+curve; and the `--video-*` scale tokens plus `ds-target-video` exist for
+video-shaped surfaces, so don't hand-roll a second type scale for one. See
+**flowmo-overview** for the full shape and **flowmo-motion-design** for authoring
+the motion itself.
+
 You **may** add NEW custom classes and NEW `:root` `--vars` — but only as ADDITIVE extensions for what the foundation doesn't cover. They compose with `ds-*` and still consume tokens. They never bypass or replace the foundation.
 
 ### Never

@@ -98,9 +98,10 @@ system; hardcode values and the swap does nothing to your markup.
 accent (+ `-subtle`), accent-2, text, text-muted, the on-fill set
 (`--color-text-on-primary`, `-on-secondary`, `-on-accent`), background, surface,
 surface-alt, border, border-subtle, success, warning, error, ring, overlay, the
-contrast-section family (`--color-section-dark-bg`, `-text`, `-text-muted`,
-`-surface`, `-surface-alt`, `-border`, `-border-subtle`, `-glass-bg`,
-`-glass-border`), and the glass material (`--glass-bg`, `--glass-border`).
+two section-tone families - `--color-section-dark-*` and
+`--color-section-light-*`, each with `-bg`, `-text`, `-text-muted`, `-surface`,
+`-surface-alt`, `-border`, `-border-subtle`, `-glass-bg`, `-glass-border` - and
+the glass material (`--glass-bg`, `--glass-border`).
 
 `--spacing-*`: 2xs, xs, sm, md, lg, xl, 2xl, 3xl, plus
 `--spacing-section-vertical`, `--spacing-section-horizontal`, and the gap trio
@@ -154,7 +155,7 @@ nothing else - no runtime is attached to a `ds-` class, ever. A carousel built
 from `ds-carousel` alone renders as a static row of slides and then just sits
 there. Behaviour comes from a bound interaction; see section 6.
 
-**Utilities:** `ds-image-frame`, `ds-section-dark`, `ds-glass`,
+**Utilities:** `ds-image-frame`, `ds-section-dark`, `ds-section-light`, `ds-glass`,
 `ds-text-gradient`, `ds-gradient-orb`, `ds-blob`, `ds-divider`,
 `ds-section-divider`, `ds-overlay`, `ds-backdrop`, `ds-bg-surface`,
 `ds-animate-fade-in|slide-up|scale-in|blur-in|float`, `ds-button-hover`,
@@ -169,13 +170,23 @@ A `ds-` name you invented has nothing behind it and is worse than a plain class,
 because it looks official. Invent plain class names freely instead - and define
 them in your `<style>` block.
 
-## Contrast sections
+## Section tones
 
-`ds-section-dark` is the semantic CONTRAST band, not literally "dark": a light
-system inverts to a dark band, a dark system to a light one. Descendants are
-rebound to the `--color-section-dark-*` family automatically, so do NOT hand-write
-dark-only compensation inside it - that fights the rebinding and breaks the moment
-the system is themed.
+`ds-section-dark` is ALWAYS a dark band and `ds-section-light` is ALWAYS a light
+one. The names are absolute: neither flips with the theme, so a dark system's
+`ds-section-dark` stays dark and its `ds-section-light` is the full-contrast
+beat, while a light system is the other way round. Read `--color-background` to
+see which way the system points, then reach for whichever tone is opposite it.
+
+The tone matching the page's own polarity does not vanish - it steps quietly off
+the canvas as a barely-distinct panel, so it is never wrong to use, just quiet.
+
+Descendants are rebound to that tone's token family automatically, so do NOT
+hand-write compensation inside a band - no white text because a band is called
+"dark", no hardcoded background. That fights the rebinding and breaks the moment
+the system is themed. Never mix a token from one family with a token from the
+other on the same element: they are two complete bands, not a light/dark pair of
+one thing.
 
 ## Video surfaces
 

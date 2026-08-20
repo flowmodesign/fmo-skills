@@ -32,6 +32,32 @@ authoring contract's validator on the exact final file before delivery.
 - **Design change ≠ content change.** When asked for a design change, change ONLY styles/spacing/color/layout/visual treatment. Keep existing text, copy, labels, image subjects, and data exactly.
 - **If it's unclear whether LAYOUT (structure/arrangement) should change too — ask first.**
 
+## A design system is ONE system with TWO targets, and motion is part of it
+
+flowmo's design system is not a palette. From a single token set it compiles two
+real, editable reference masters:
+
+- **WEB** - a full specimen page (navigation, hero, content system, carousel,
+  tabs/comparison, component states, FAQ + form, footer), opened in the website
+  Studio.
+- **VIDEO** - a real f0 video document, not a picture of one: seven shots (title
+  still, editorial bar, motion graphic, type-in-motion, type still, data story,
+  outro resolve), each with its own timeline, composed on a master timeline as
+  precomp layers so it plays back as an actual edit. Opened in the video editor.
+
+Video is an ADDITIVE layer over the same system, never a second one. Same colors,
+fonts and easing; only the SCALE changes, via `ds-target-video` and the
+`--video-*` tokens (type scale, spacing scale, control height, safe area, aspect
+ratio). So a change to the tokens is a change to the film as well as the page.
+
+**Motion and interaction are part of the system, not decoration added after.**
+Both masters carry real GSAP motion with a manifest: the web master ships reveal
+recipes (fade-up, fade-scale, slide-up, word-up, line-mask, with optional
+char/word/line text splits) authored so they materialize as NATIVE, EDITABLE
+interactions in Studio - not a baked script; the video master carries per-shot
+timelines. The system's `--ease-*` and `--transition-*` tokens are that motion's
+personality and drive both targets.
+
 ## The cornerstone rule (see flowmo-frontend-design)
 flowmo's `ds-*` classes + `var(--token)` design tokens are the **cornerstones** — build every page ON them. You MAY add custom classes/vars, but only as ADDITIVE extensions that compose with `ds-*` and still consume tokens. Never use Tailwind/Bootstrap. Never hardcode a value that has a matching token. Never inline a whole design as hardcoded styles to dodge a tool.
 
