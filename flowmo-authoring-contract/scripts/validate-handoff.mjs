@@ -2,6 +2,33 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+/**
+ * THE REAL IMPORTER ROUTING, bundled from f0's own `script-triage` module.
+ *
+ * This validator used to re-implement those rules by hand. A hand copy of a
+ * moving target drifts, and it did: it passed a handoff whose ~50 tweens all
+ * sank into one opaque code element, because the importer rejects some shapes
+ * the copy never knew about. A mandatory gate that says "valid" about a page
+ * which imports dead is worse than no gate at all.
+ *
+ * So the decision below is not a description of f0's behaviour - it IS f0's
+ * behaviour, the same function `runPageImport` routes with.
+ */
+const HERE = path.dirname(fileURLToPath(import.meta.url));
+let triageInlineScript;
+try {
+  ({ triageInlineScript } = await import(path.join(HERE, 'triage.generated.mjs')));
+} catch (error) {
+  console.error(
+    'f0 validator: triage.generated.mjs is missing or unreadable, so this run '
+    + 'could not check scripts against the real importer routing.\n'
+    + 'Reinstall the skill (it ships beside this file), rather than trusting a partial pass.\n'
+    + String((error && error.message) || error),
+  );
+  process.exit(1);
+}
 
 function fail(message) {
   console.error(`f0 editable-motion handoff validation failed: ${message}`);
@@ -122,76 +149,19 @@ function blankRange(source, start, end) {
 }
 
 /**
- * Conservative, dependency-free check for the importer-safe direct GSAP form.
- * It intentionally accepts less than f0 (not more): advanced motion belongs in
- * the native payload, where there is no ambiguity or opaque code fallback.
+ * Ask the REAL importer what happens to this script.
+ *
+ * `convert` - every tween lands as an editable native f0 interaction.
+ * `sink`    - the whole block becomes one opaque code element. Routing is
+ *             ATOMIC per script, so a single unsupported construct takes every
+ *             other tween in the same block down with it. That is what makes a
+ *             near-miss so expensive, and why this is a hard failure.
+ * `ignore`  - nothing executable; harmless.
  */
 function validateClassicScript(source) {
-  const forbidden = [
-    [/\bgsap\s*\.\s*timeline\s*\(/, 'gsap.timeline()'],
-    [/\bScrollTrigger\s*\./, 'imperative ScrollTrigger API'],
-    [/\bdocument\s*\./, 'DOM query/access'],
-    [/\bwindow\s*\./, 'window measurement/access'],
-    [/\b(?:if|else|for|while|switch|try|catch|function)\b/, 'control flow or helper function'],
-    [/=>/, 'callback/function value'],
-    [/\b(?:const|let|var)\b/, 'variable setup'],
-    // `pin` / `pinSpacing` / `anticipatePin` were listed here because the
-    // importer used to drop them. It now carries them into the native
-    // trigger, so rejecting them sends authors to the payload for a pinned
-    // scroll story the atomic form handles - a false failure is as costly
-    // here as a missed one, because this gate is mandatory.
-    [/\b(?:keyframes|onUpdate|onStart|onComplete|onLeave|onEnter|onToggle|snap)\s*:/, 'unsupported GSAP vars'],
-  ];
-  for (const [pattern, reason] of forbidden) {
-    if (pattern.test(source)) return { ok: false, reason };
-  }
-
-  let residue = source;
-  const ranges = [];
-  const callPattern = /gsap\s*\.\s*(fromTo|from|to)\s*\(/g;
-  let match;
-  while ((match = callPattern.exec(source))) {
-    const open = match.index + match[0].length - 1;
-    const close = matchingParen(source, open);
-    if (close === -1) return { ok: false, reason: 'unbalanced GSAP call' };
-    const args = splitArgs(source.slice(open + 1, close));
-    const expectedArgs = match[1] === 'fromTo' ? 3 : 2;
-    if (args.length !== expectedArgs) return { ok: false, reason: `gsap.${match[1]}() argument shape` };
-    if (!/^(?:'[^']*'|"[^"]*")$/.test(args[0])) {
-      return { ok: false, reason: `gsap.${match[1]}() target is not a literal selector` };
-    }
-    for (const vars of args.slice(1)) {
-      if (!vars.startsWith('{') || !vars.endsWith('}')) {
-        return { ok: false, reason: `gsap.${match[1]}() vars are not object literals` };
-      }
-    }
-    let end = close + 1;
-    while (/\s/.test(source[end] || '')) end++;
-    if (source[end] === ';') end++;
-    ranges.push([match.index, end]);
-    callPattern.lastIndex = close + 1;
-  }
-  if (!ranges.length) return { ok: false, reason: 'arbitrary executable inline JavaScript' };
-
-  const registerPattern = /gsap\s*\.\s*registerPlugin\s*\(/g;
-  while ((match = registerPattern.exec(source))) {
-    const open = match.index + match[0].length - 1;
-    const close = matchingParen(source, open);
-    if (close === -1) return { ok: false, reason: 'unbalanced registerPlugin call' };
-    let end = close + 1;
-    while (/\s/.test(source[end] || '')) end++;
-    if (source[end] === ';') end++;
-    ranges.push([match.index, end]);
-    registerPattern.lastIndex = close + 1;
-  }
-  for (const [start, end] of ranges.sort((a, b) => b[0] - a[0])) {
-    residue = blankRange(residue, start, end);
-  }
-  residue = residue
-    .replace(/\/\*[\s\S]*?\*\//g, '')
-    .replace(/\/\/[^\r\n]*/g, '')
-    .replace(/[\s;]/g, '');
-  return residue ? { ok: false, reason: 'mixed supported and unsupported statements' } : { ok: true };
+  const { decision, reason } = triageInlineScript(source);
+  if (decision === 'convert' || decision === 'ignore') return { ok: true, decision };
+  return { ok: false, reason, decision };
 }
 
 const sourcePath = process.argv[2];

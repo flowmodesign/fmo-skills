@@ -89,10 +89,18 @@ payload. The import accepts those, which is why they are not a gate failure, but
 a warning means the handoff is not written the way f0 is edited: clear them
 before delivery.
 
-The validator is intentionally conservative: it rejects ambiguous classic
-scripts that the product could preserve only as opaque code. It validates the
-editable-motion boundary; also inspect layout, assets, copy, and responsive
-behavior visually.
+The validator does not describe f0's import rules - it RUNS them. It carries a
+generated bundle of the importer's own routing, so "the validator says this
+converts" and "f0 converts this" are the same statement. A pass means these
+scripts really do arrive as editable interactions.
+
+Remember that routing is ATOMIC per script block: one unsupported construct
+sinks every other tween in the same block with it. A near-miss does not cost you
+one animation, it costs you all of them, which is why a failure here is a hard
+stop rather than a hint.
+
+It validates the editable-motion boundary only; also inspect layout, assets,
+copy, and responsive behavior visually.
 
 ## Final handoff checklist
 
