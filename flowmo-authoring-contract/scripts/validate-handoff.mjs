@@ -17,6 +17,7 @@ import { fileURLToPath } from 'node:url';
  * behaviour, the same function `runPageImport` routes with.
  */
 const HERE = path.dirname(fileURLToPath(import.meta.url));
+const { lintCss, lintMotion, lintLocalScripts, lintHiddenAssetRefs, readLinkedCss } = await import(path.join(HERE, 'handoff-lint.mjs'));
 let triageInlineScript;
 try {
   ({ triageInlineScript } = await import(path.join(HERE, 'triage.generated.mjs')));
@@ -89,63 +90,6 @@ function collectSelectors(value, selectors, pathParts = []) {
     }
     collectSelectors(child, selectors, childPath);
   }
-}
-
-function matchingParen(source, open) {
-  let depth = 0;
-  let quote = '';
-  let escaped = false;
-  for (let index = open; index < source.length; index++) {
-    const char = source[index];
-    if (quote) {
-      if (escaped) escaped = false;
-      else if (char === '\\') escaped = true;
-      else if (char === quote) quote = '';
-      continue;
-    }
-    if (char === '"' || char === "'" || char === '`') { quote = char; continue; }
-    if (char === '(') depth++;
-    else if (char === ')' && --depth === 0) return index;
-  }
-  return -1;
-}
-
-function splitArgs(source) {
-  const parts = [];
-  let start = 0;
-  let round = 0;
-  let square = 0;
-  let curly = 0;
-  let quote = '';
-  let escaped = false;
-  for (let index = 0; index < source.length; index++) {
-    const char = source[index];
-    if (quote) {
-      if (escaped) escaped = false;
-      else if (char === '\\') escaped = true;
-      else if (char === quote) quote = '';
-      continue;
-    }
-    if (char === '"' || char === "'" || char === '`') { quote = char; continue; }
-    if (char === '(') round++;
-    else if (char === ')') round--;
-    else if (char === '[') square++;
-    else if (char === ']') square--;
-    else if (char === '{') curly++;
-    else if (char === '}') curly--;
-    else if (char === ',' && round === 0 && square === 0 && curly === 0) {
-      parts.push(source.slice(start, index).trim());
-      start = index + 1;
-    }
-  }
-  parts.push(source.slice(start).trim());
-  return parts;
-}
-
-function blankRange(source, start, end) {
-  return source.slice(0, start)
-    + source.slice(start, end).replace(/[^\r\n]/g, ' ')
-    + source.slice(end);
 }
 
 /**
@@ -316,7 +260,7 @@ let styleIndex = 0;
 while ((styleMatch = stylePattern.exec(html))) {
   styleIndex++;
   const idRules = new Set();
-  // Selector text only - the part before each `{`, so a `#fff` colour value in
+  // Selector text only - the part before each `{`, so a `#fff` color value in
   // a declaration is never mistaken for an id selector.
   for (const block of styleMatch[1].replace(/\/\*[\s\S]*?\*\//g, '').split('}')) {
     const selectorText = block.split('{')[0];
@@ -344,8 +288,25 @@ const scrubMarkers = (html.match(
   /\bdata-f0-(?:video|image-sequence|lottie)-scrub\b/gi,
 ) || []).length;
 
+/**
+ * Import fidelity (handoff-lint.mjs): shapes that route fine but import WRONG -
+ * selector-group bleed, flattened @starting-style/@supports, CSS animations the
+ * converter mangles, reduced-motion overrides that lose the cascade, scroll
+ * timelines fighting over one property, and local scripts. Linked LOCAL
+ * stylesheets count: the folder import inlines them, so their rules matter as
+ * much as an inline <style>.
+ */
+const cssSources = [
+  ...[...html.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style\s*>/gi)].map((m, i) => ({ label: `style ${i + 1}`, css: m[1] })),
+  ...readLinkedCss(html, absolutePath),
+];
+const convertible = classicScripts.filter(({ code }) => validateClassicScript(code).ok);
+const onThisPage = (selector) => selectorExists(selector.replace(/::?[\w-]+(\([^)]*\))?/g, ''), domSignatures);
+warnings.push(...lintCss(cssSources, onThisPage), ...lintMotion(convertible, html), ...lintLocalScripts(html, absolutePath),
+  ...lintHiddenAssetRefs(html));
+
 if (warnings.length) {
-  console.error(`f0 handoff warnings (classes, not ids) for ${absolutePath}`);
+  console.error(`f0 handoff warnings for ${absolutePath} (the file imports, but these parts will not match the source)`);
   for (const warning of warnings) console.error(`- ${warning}`);
 }
 

@@ -1,0 +1,39 @@
+{
+  "schema": "flowmo-game-design/audio-mix@1",
+  "items": [
+    {
+      "id": "voice-level",
+      "title": "Voice / spoken lines",
+      "target_dbfs": -6,
+      "notes": "Normalize spoken lines to this level. Stays above SFX and music in the final mix."
+    },
+    {
+      "id": "sfx-level",
+      "title": "Sound effects",
+      "target_dbfs_min": -12,
+      "target_dbfs_max": -10,
+      "notes": "Stays above music, below voice."
+    },
+    {
+      "id": "music-level",
+      "title": "Music and ambience loop",
+      "target_dbfs_min": -20,
+      "target_dbfs_max": -18,
+      "notes": "Lowest layer of the mix. Loop with a short fade at each loop boundary, never a hard cut."
+    },
+    {
+      "id": "true-peak-ceiling",
+      "title": "Final true peak ceiling",
+      "target_dbfs_max": -3,
+      "notes": "Measured after every layer (voice, SFX, music) is combined, not per-layer."
+    },
+    {
+      "id": "scope-budget",
+      "title": "Small-build audio scope",
+      "max_music_loops": 2,
+      "max_essential_sfx": 5,
+      "voice_policy": "one locked voice per speaking entity, reused consistently",
+      "notes": "SFX priority order: primary verb, damage/feedback, pickup/reward, one environmental cue, one ambience layer."
+    }
+  ]
+}

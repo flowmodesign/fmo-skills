@@ -1,0 +1,118 @@
+{
+  "schema": "flowmo-thumbnail/frameworks@1",
+  "shared_truth_rule": "The image may exaggerate but must honestly represent the video. A concept that misrepresents the content breaks viewer trust - keep any baked or overlay text short and true. Every item below repeats this same rule so it reads standalone.",
+  "items": [
+    {
+      "id": "before-after-transformation",
+      "title": "Before/After Transformation",
+      "when": "The video's payoff is a visible change in one subject (a person, a room, a result) and the change itself is the hook.",
+      "composition": "Split the frame into two halves showing the same subject in its before and after state - maximum visual contrast between the two states, same camera angle and framing on both sides so the comparison reads instantly.",
+      "truth_rule": "The image may exaggerate but must honestly represent the video. A concept that misrepresents the content breaks viewer trust - keep any baked or overlay text short and true."
+    },
+    {
+      "id": "social-ui",
+      "title": "Social UI (tweet / DM / review)",
+      "when": "The video reacts to, replies to, or is triggered by a real message, comment, or review, and showing the message IS the information gap.",
+      "composition": "A generic chat bubble, DM row, or star-review card placed beside the subject; a short truthful line of overlay text carries the message; never reproduce a real platform's brand marks or a real handle.",
+      "truth_rule": "The image may exaggerate but must honestly represent the video. A concept that misrepresents the content breaks viewer trust - keep any baked or overlay text short and true."
+    },
+    {
+      "id": "three-step-progression",
+      "title": "Three-Step Progression",
+      "when": "The video tells a start-to-finish arc with a clear middle beat worth previewing (a challenge, a build, a transformation over time).",
+      "composition": "Three vertical panels - start, mid story-beat, end - in one continuous frame or a plain split; an optional day/step badge on the last panel reinforces the arc.",
+      "truth_rule": "The image may exaggerate but must honestly represent the video. A concept that misrepresents the content breaks viewer trust - keep any baked or overlay text short and true."
+    },
+    {
+      "id": "compelling-screenshot",
+      "title": "Compelling Screenshot",
+      "when": "The user has a real, striking frame from the source footage - not a generation task at all.",
+      "composition": "Use the actual video frame as-is, or generate a Posed Action Shot that matches its first frame if no source clip is available. Flag to the user when they should supply the real frame instead of generating one.",
+      "truth_rule": "The image may exaggerate but must honestly represent the video. A concept that misrepresents the content breaks viewer trust - keep any baked or overlay text short and true."
+    },
+    {
+      "id": "posed-portrait",
+      "title": "Posed Portrait",
+      "when": "The default framework whenever a specific person's presence and expression carry the hook and no stronger concept exists.",
+      "composition": "The subject rendered large, filling most of the frame, with the identity lock and the lighting-rig blocks doing the work; very little or nothing in the background - the subject is the entire focus.",
+      "truth_rule": "The image may exaggerate but must honestly represent the video. A concept that misrepresents the content breaks viewer trust - keep any baked or overlay text short and true."
+    },
+    {
+      "id": "posed-action-shot",
+      "title": "Posed Action Shot",
+      "when": "The hook is a moment of action rather than a static expression - a stunt, a reaction, a physical event.",
+      "composition": "One intriguing action caught mid-moment; keep the frame uncrowded with a single, unambiguous hero action.",
+      "truth_rule": "The image may exaggerate but must honestly represent the video. A concept that misrepresents the content breaks viewer trust - keep any baked or overlay text short and true."
+    },
+    {
+      "id": "highlighting-a-day",
+      "title": "Highlighting a Specific Day",
+      "when": "The video covers a multi-day arc (a challenge, a build, a survival format) and one specific day is the most dramatic to preview.",
+      "composition": "Any other framework, plus a large DAY N badge as overlay or baked text; pick a day from the last fifth of the arc so it reads as a climax, not a midpoint.",
+      "truth_rule": "The image may exaggerate but must honestly represent the video. A concept that misrepresents the content breaks viewer trust - keep any baked or overlay text short and true."
+    },
+    {
+      "id": "graphical-representation",
+      "title": "Graphical Representation",
+      "when": "The hook is a data point, comparison, or idea better shown as a diagram than as a photoreal scene.",
+      "composition": "A clean, non-photoreal diagram or graphic brief (a curve, a simple familiar chart shape) in place of the photoreal frame block; drop the lighting-rig language entirely for this framework.",
+      "truth_rule": "The image may exaggerate but must honestly represent the video. A concept that misrepresents the content breaks viewer trust - keep any baked or overlay text short and true."
+    },
+    {
+      "id": "landscape",
+      "title": "Landscape",
+      "when": "The location or environment itself is the draw - a place, a scale of nature, a striking setting.",
+      "composition": "The environment is the hero of the frame; keep one small subject placed on a power third for scale and human interest; the lighting rig is optional here.",
+      "truth_rule": "The image may exaggerate but must honestly represent the video. A concept that misrepresents the content breaks viewer trust - keep any baked or overlay text short and true."
+    },
+    {
+      "id": "map-aerial",
+      "title": "Map / Aerial",
+      "when": "The video is about a journey, a route, or a geographic comparison.",
+      "composition": "A map or an aerial photo as the frame; a highlighted route or point (a circle, an arrow, a short truthful label) supplies the information gap.",
+      "truth_rule": "The image may exaggerate but must honestly represent the video. A concept that misrepresents the content breaks viewer trust - keep any baked or overlay text short and true."
+    },
+    {
+      "id": "product",
+      "title": "Product",
+      "when": "The video's answer is a specific product and showing it is the payoff, not a spoiler.",
+      "composition": "The product is the sharp, hero subject of the frame; open the gap by making the product itself the answer to the title's implied question rather than explaining it.",
+      "truth_rule": "The image may exaggerate but must honestly represent the video. A concept that misrepresents the content breaks viewer trust - keep any baked or overlay text short and true."
+    },
+    {
+      "id": "adding-text",
+      "title": "Adding Text",
+      "when": "A short word or phrase sharpens a concept that is otherwise visually complete.",
+      "composition": "Use the overlay-preset text stack by default, or baked text only on explicit request; treat the text as a callout (an arrow plus one word) or as the continuation of the title's question, never as a caption that restates the image.",
+      "truth_rule": "The image may exaggerate but must honestly represent the video. A concept that misrepresents the content breaks viewer trust - keep any baked or overlay text short and true."
+    },
+    {
+      "id": "repetition-of-objects",
+      "title": "Repetition of Objects",
+      "when": "The hook is quantity or excess - a large amount of one thing is inherently surprising.",
+      "composition": "A large quantity of one object filling the frame while staying individually legible; add one context element and a subject for scale.",
+      "truth_rule": "The image may exaggerate but must honestly represent the video. A concept that misrepresents the content breaks viewer trust - keep any baked or overlay text short and true."
+    },
+    {
+      "id": "size-difference",
+      "title": "Size Difference",
+      "when": "The hook is an extreme scale contrast central to the story - giant versus tiny, one versus a crowd.",
+      "composition": "Extreme scale contrast between two elements central to the story, staged in the same frame so the comparison is immediate.",
+      "truth_rule": "The image may exaggerate but must honestly represent the video. A concept that misrepresents the content breaks viewer trust - keep any baked or overlay text short and true."
+    },
+    {
+      "id": "news-clip",
+      "title": "News Clip",
+      "when": "The video frames itself as breaking, urgent, or newsworthy and that urgency is the hook.",
+      "composition": "A generic breaking-news lower-third or chyron over the image, generic broadcaster styling, one short truthful line; never reproduce a real network's brand marks.",
+      "truth_rule": "The image may exaggerate but must honestly represent the video. A concept that misrepresents the content breaks viewer trust - keep any baked or overlay text short and true."
+    },
+    {
+      "id": "amplified-reality",
+      "title": "Amplified Reality",
+      "when": "A real element from the story is already striking and exaggerating it further sharpens the hook without inventing anything.",
+      "composition": "Build on a Posed Action Shot and exaggerate exactly one real element from the story (make it oversized or more intense); keep it plausible - over-amplification kills trust.",
+      "truth_rule": "The image may exaggerate but must honestly represent the video. A concept that misrepresents the content breaks viewer trust - keep any baked or overlay text short and true."
+    }
+  ]
+}

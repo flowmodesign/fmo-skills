@@ -1,6 +1,21 @@
 ---
 name: flowmo-motion-design
-description: Author web motion in flowmo (f0) and route importable HTML motion through the stricter editable-handoff contract. Use for animate, motion, scroll, parallax, interactions, and files intended for f0 Import page or drag-and-drop.
+version: 1
+family: animation
+title: Motion design
+description: Author web motion in flowmo (f0) and route importable HTML motion through the stricter editable-handoff contract. Use for animate, motion, scroll, parallax, interactions, and files intended for f0 Import page or drag-and-drop. Use when the request is reveals, scroll-scrub, parallax, staggers, or stateful component patterns (carousel/tabs/accordion). NOT for code-driven visuals like particles/WebGL (flowmo-interactive-design) or 3D camera/object motion (flowmo-3d). NOT for: producing a video with a generative video model (use flowmo-gen-video-motion-graphics).
+surfaces: [assistant-web, flowgen-web-node, flowgen-shot-node:motion, mcp, designer:page, designer:deck, designer:motion, designer:ad, designer:video]
+tools: [assistant-web:author_animation, assistant-web:read_animations, assistant-web:update_animation, assistant-web:list_motion_recipes, flowgen-web-node:author_animation, flowgen-web-node:read_animations, flowgen-web-node:update_animation, flowgen-web-node:list_motion_recipes, flowgen-shot-node:author_animation, flowgen-shot-node:read_animations, flowgen-shot-node:update_animation, flowgen-shot-node:list_motion_recipes, mcp:author_animation, mcp:read_animations, mcp:update_animation, mcp:list_motion_recipes, designer:set_motion, designer:set_interactions]
+writes: [motion, ix]
+renditions:
+  designer-motion: [designer]
+triggers:
+  - animate
+  - scroll reveal
+  - parallax
+  - gsap
+  - stagger
+derived_from: https://github.com/freshtechbro/claudedesignskills
 ---
 
 # flowmo motion design
@@ -19,13 +34,19 @@ can contain arbitrary GSAP and become editable.
 2. **Stateful component patterns** — carousel, tabs, accordion, variant-animate, auto-animate, follow-mouse → component presets with `.f0-*` classes (below).
 
 Inspect before editing with **`read_animations`**; change in place with **`update_animation`** (needs `interaction_id`).
+`read_animations` is a lossy summary for timelines. It collapses each layer to
+its first and last keyframe and leaves out per-keyframe eases, stagger `grid`,
+and `repeat`/`yoyo`. It also lists every page's interactions. Never rewrite a
+timeline by passing that summary back to `update_animation`: it would replace
+the stored keyframes with the collapsed version. Rewrite only from the full
+intent, or change the specific step.
 
 ## author_animation
 - Pass `timeline` = a JSON array of GSAP entries + a `trigger_type` (and `trigger_config`), plus `element_id` or `target_selector`.
 - Entry shape: `{ "method":"from"|"to"|"fromTo"|"set", "target":".sel", "vars":{…}, "position"?:"+=0.2"|"<"|">" }`.
 - **Every selector is a CLASS — never an id.** `target`, `target_selector`, `scrollTrigger.trigger`, `pinTarget`, `bounds`, `scope`: all `.class`, never `#id`. An id binds one element ever, so the animation breaks as soon as the user duplicates the section or reuses the component, and a duplicated id is invalid HTML. If an element has no class to animate, add one. (Ids belong to anchors, form wiring, and SVG internal references like gradients/`clipPath`/`mask` — never to motion.)
 - Durations in **seconds**; GSAP ease names (`"power3.out"`, `"back.out(1.7)"`, `"none"`).
-- **Stagger** = `vars.stagger` (number, or `{ each, from:"center"|… }`). **Text split** = `vars.splitText:"chars"|"words"|"lines"` (+ `vars.splitMask`). No special tool — author them inline.
+- **Stagger** = `vars.stagger` (number, or `{ each, amount, from, ease, grid, axis }`). Use one repeating class selector and one stagger object; never clone the tween once per matched element. Prefer `amount` when the total spread must stay constant as the item count changes. **Text split** = `vars.splitText:"chars"|"words"|"lines"` (+ `vars.splitMask`). No special tool — author them inline.
 - **Triggers (all 15):** `load | click | hover | focus | scroll-reveal | scroll-scrub | scroll-inertia | mouse-position | follow-mouse | mouse-rotate | swipe | drag | resize | page-unload | form-submit`. Each takes its own `trigger_config` keys — pointer ones share `{ axis, scope, smooth, distance }`, `swipe` takes `{ direction, threshold }`, `drag` takes `{ axis, bounds, inertia, mapToProgress }`, `resize` takes `{ mode, minWidth, maxWidth, debounce }`. The tool description lists the full set per trigger.
 
 ### Scroll the GSAP-native way
@@ -47,22 +68,34 @@ Put `scrollTrigger:{ start, end, scrub, pin }` directly inside a tween's `vars` 
 - **Accordion** (`variant "single"(default)|"multi"`): `.f0-accordion-item` wraps each row; `.f0-accordion-trigger` is the clickable header; `.f0-accordion-panel` is the collapsible body.
 - **Reveals (repeating items):** `.f0-reveal` on each child (for a staggered `author_animation`, not a component preset).
 
+## Translating from Motion / Framer (React)
+f0 cannot import React, so Motion components never arrive. Map `initial`/`whileInView`, variants and stagger, springs, gestures, `layoutId`, `AnimatePresence`, `useScroll` and reduced motion to a GSAP, native or CSS carrier (gaps marked) with
+[references/motion-framer-translation.md](references/motion-framer-translation.md).
+
 ## Importing existing GSAP / HTML (mandatory separate contract)
 
 For an HTML file intended for **Import page** or drag-and-drop, load
 **flowmo-authoring-contract** and read its motion reference before writing or
-repairing motion. The importer converts only atomic direct
-`gsap.from/to/fromTo` calls with literal selectors and literal vars. Unsupported
-classic scripts are preserved as opaque page-code elements; they are not native
-motion and must not be described as a successful editable import.
+repairing motion. The importer converts atomic direct `gsap.from/to/fromTo`
+calls and a static literal `gsap.timeline()` subset into native f0 motion. Give
+every direct tween a meaningful literal `id`, and every timeline a meaningful
+`id` in its options. Repeated items stay one broad class selector plus one
+stagger; intentional multi-step choreography belongs in one timeline. Compatible
+direct calls in the same section or on the same scroll trigger may be grouped
+automatically, but an explicit timeline communicates the intended sequence.
 
-Use the inert native `data-f0-interactions` payload for timelines, pinning,
-responsive branches, DOM measurements/refs, callbacks, computed ranges,
-carousels, tabs, accordions, and advanced triggers. Use declarative
+Use exactly one carrier for each effect: converter-safe GSAP or an inert native
+`data-f0-interactions` payload, never both. Use the native payload for dynamic
+callbacks, DOM measurements/refs, computed ranges, responsive branches,
+overlapping writes to the same property, nested triggers, layout-dependent
+`grid: 'auto'`, carousels, tabs, accordions, and advanced triggers. Unsupported
+classic scripts are preserved atomically as opaque page-code elements; they are
+not native motion and must not be described as a successful editable import.
+Use declarative
 `data-f0-*-scrub` markers for media. Never use a live sandbox as a workaround
 when editability is the point. Run the authoring contract's validator on the
 exact final file and fix every failure before handoff.
 
 ## FOUC / preview rules (tell the user)
 - Never write `opacity:0` / `display:none` into persistent CSS on animated elements — let the runtime own starting state.
-- Scroll-reveal / scroll-scrub / entrance animations PLAY IN PREVIEW (▶), not in the static design canvas (which shows the resting state). Live interactive/3D heroes DO render in the canvas. So a calm canvas with preview-only motion is expected — but a hero with no live 3D/interactive element is not.
+- Scroll-reveal / scroll-scrub / entrance animations PLAY IN PREVIEW (the Play button), not in the static design canvas (which shows the resting state). Live interactive/3D heroes DO render in the canvas. So a calm canvas with preview-only motion is expected — but a hero with no live 3D/interactive element is not.

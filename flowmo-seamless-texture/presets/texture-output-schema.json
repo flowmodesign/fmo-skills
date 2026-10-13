@@ -1,0 +1,41 @@
+{
+  "schema": "flowmo-seamless-texture/texture-output-schema@1",
+  "items": [
+    {
+      "id": "ref",
+      "title": "Square-cropped reference",
+      "role": "The square crop the pipeline started from (step 1: square crop), kept unmodified for provenance and for re-entering a later phase.",
+      "typical_use": "Not shipped in the engine PBR set; source of truth for histogram match (step 4) and for re-running the pipeline."
+    },
+    {
+      "id": "seamless",
+      "title": "Seamless base tile",
+      "role": "The tileable base color image itself, after border trim, histogram match, periodic decomposition, luminance flatten and min-cut seam finding.",
+      "typical_use": "The tile that gets placed and repeated; the source every other map in the set is derived from."
+    },
+    {
+      "id": "basecolor",
+      "title": "Base color / albedo",
+      "role": "Same pixel content as the seamless tile, named for an engine's base-color / albedo material slot.",
+      "typical_use": "Diffuse/albedo input in a PBR material."
+    },
+    {
+      "id": "normal",
+      "title": "Normal map",
+      "role": "Tangent-space surface-detail map derived from the height map's wrap-around gradient.",
+      "typical_use": "Surface micro-geometry (bumps, grain, mortar lines) without added polygon count."
+    },
+    {
+      "id": "roughness",
+      "title": "Roughness map",
+      "role": "Local high-frequency contrast, inverted and clamped, derived from the same luminance signal as the height map.",
+      "typical_use": "Micro-surface roughness input in a PBR material; busier detail reads as rougher."
+    },
+    {
+      "id": "height",
+      "title": "Height / displacement map",
+      "role": "Band-pass luminance signal (fine minus coarse blur), percentile-normalized to 0-1.",
+      "typical_use": "Parallax/displacement input, and the source the normal map's gradient is computed from."
+    }
+  ]
+}

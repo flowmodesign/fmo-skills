@@ -59,7 +59,11 @@ export default function Widget({ title, count, accent, children, isActive }) { /
 ```
 
 Types: `text`, `textarea`, `number`, `color`, `boolean`, `select`, `image`,
-`video`, `file`, `url`, `range`, `repeater`. `select` takes `options`;
+`video`, `file`, `url`, `range`, `repeater`. That is the import list
+(`fields-convention.ts`). The MCP `create_interactive_element` /
+`update_interactive_element` schemas accept only `text`, `textarea`, `number`,
+`color`, `boolean`, `select`, `image`, `url`, `range`, `repeater`: if the field may
+later be edited through the MCP, declare a video as `url`. `select` takes `options`;
 `number`/`range` take `min`/`max`/`step`; `repeater` takes `itemFields` (no nested
 repeaters). At runtime `number`/`range` arrive as JS numbers and `boolean` as a JS
 boolean; everything else is a string. Declare a field for every prop you read - an
@@ -113,6 +117,65 @@ its `f0Fields` already exposed as sidebar controls:
   immediately. Source that does not compile still imports - you get the element
   and the error in the code editor rather than a silent no-show.
 
+## Placing and sizing a code element on the page
+
+An imported code element is not where its TSX block was. Plan for it:
+
+- **f0 appends every code element at the END of the page.** The user drags it
+  into place after import, so the handoff must say where each one goes (a
+  comment at the top of the file and in the export README), and a placeholder
+  section ("drag X here, then delete this") marks the slot.
+- **It renders at 100% of its f0 box, and the box has no height of its own.**
+  In the editor the component sits inside `[data-f0-kind="interactive"] > div
+  (100% x 100%) > div (absolute, inset 0)`; in Preview / published pages it is
+  rendered straight into the `[data-f0-id]` node
+  (`interactive/runtime-bundle-entry.ts`, `createRoot(node)`). A tall widget (a
+  900vh scroll builder) therefore overflows on top of the sections after it,
+  and the page ends where its box does. The component must size its own box:
+
+  ```jsx
+  React.useEffect(() => {
+    const box = host.current.closest('[data-f0-kind="interactive"]') || host.current.parentElement;
+    const prev = box.style.minHeight;
+    box.style.minHeight = '900vh';           // the widget's real height
+    return () => { box.style.minHeight = prev; };
+  }, []);
+  ```
+
+  Do the same for an overlay widget (pills over a hero): give its box a class
+  with `position: absolute` and the placement, `!important` on width/height
+  because f0 writes a per-element size rule on the box. After a live import,
+  also write the size on the element (`.f0-id-X[data-f0-id="X"] { height: 900vh }`)
+  so the editor canvas, which shows a frozen render, lays out the same.
+- **Anchors on the slot are lost.** If the slot section carried `id="build"` for
+  an in-page link and the user replaces the slot with the element, the link goes
+  nowhere. Have the component set the id on its box when no element has it.
+- **No `position: fixed` inside a widget.** Use `position: sticky` within the
+  widget instead (a bottom bar: last child, `sticky; bottom: 0`, with the
+  preceding content carrying a negative `margin-bottom` of the bar's height, not
+  the bar a negative `margin-top`, or the bar can peek above the widget). A sticky
+  bar shows only while the widget is on screen, which is usually what was meant.
+- **Its CSS may use token fallbacks.** CSS a component injects at runtime is
+  outside the design-system pipeline, and a project whose DESIGN.md was never
+  applied leaves every `var(--color-*)` empty. Inside the component write
+  `var(--color-background, #efece8)`; in page CSS the rule above still holds.
+
+## Media and page elements from inside a component
+
+- **Media paths inside TSX are never uploaded or rewritten.** A `"video/clip.mp4"`
+  string in the component points nowhere after import. Put the file in the page
+  as a real element (a hidden `<img>` / `<video preload="none">` in an
+  `aria-hidden` wrapper clipped to 1px) and read its `currentSrc` at mount, or
+  expose an `image` / `url` field. f0 uploads and rewrites the element.
+- **A component can drive native elements.** When the content is media the user
+  should keep editing (a stack of hero videos), leave it as native elements and
+  let the component find them by class and control them (opacity, play/pause,
+  `currentTime`), restoring their inline styles on cleanup. The component then
+  only owns behaviour and its own small UI (pills).
+- **Components can talk through window events** (`dispatchEvent(new
+  CustomEvent('x:start', { detail }))`), registered and removed with the rest of
+  the component's listeners. Each still works alone.
+
 ## Libraries
 
 These globals are available to code running inside flowmo, and load automatically
@@ -121,3 +184,9 @@ when referenced: `THREE`, `gsap`, `d3`, `p5`, `Tone`, `Matter`, `PIXI`, `Konva`,
 `lottie`, `marked`, `DOMPurify`, `QRCode`, `Swiper`, `SplitType`, `Splitting`.
 Reference the GLOBAL (`new THREE.Scene()`) - do not import it. If what you need is
 not on that list, say so: a hand-written CDN tag will not load.
+
+`THREE` is f0's bundled build (0.170). Code written against r128 renders washed
+out and dark there: read `THREE` at mount, and from r152 set `texture.colorSpace =
+THREE.SRGBColorSpace` and pass colors without `convertSRGBToLinear()`; from r155
+multiply light intensities by `Math.PI`. To test locally, load three 0.170 from a
+CDN as an ES module and assign `window.THREE = { ...THREE }`.

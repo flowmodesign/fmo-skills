@@ -1,0 +1,100 @@
+{
+  "schema": "flowmo-design-recipe/dials@1",
+  "items": [
+    {
+      "id": "design-variance",
+      "kind": "dial",
+      "title": "Design Variance",
+      "scale": "1-10",
+      "low_meaning": "Perfect symmetry, centered, predictable grid",
+      "high_meaning": "Artsy chaos, broken grid, asymmetric composition",
+      "baseline": 8
+    },
+    {
+      "id": "motion-intensity",
+      "kind": "dial",
+      "title": "Motion Intensity",
+      "scale": "1-10",
+      "low_meaning": "Static, no animated elements",
+      "high_meaning": "Cinematic, physics-driven, scroll-scrubbed",
+      "baseline": 6
+    },
+    {
+      "id": "visual-density",
+      "kind": "dial",
+      "title": "Visual Density",
+      "scale": "1-10",
+      "low_meaning": "Art gallery, airy, generous whitespace",
+      "high_meaning": "Cockpit, packed data, tight grid",
+      "baseline": 4
+    },
+    {
+      "id": "landing-saas",
+      "kind": "use-case-preset",
+      "title": "Landing page, mainstream SaaS",
+      "design_variance": 7,
+      "motion_intensity": 6,
+      "visual_density": 4
+    },
+    {
+      "id": "landing-agency",
+      "kind": "use-case-preset",
+      "title": "Landing page, agency or creative studio",
+      "design_variance": 9,
+      "motion_intensity": 8,
+      "visual_density": 3
+    },
+    {
+      "id": "landing-premium-consumer",
+      "kind": "use-case-preset",
+      "title": "Landing page, premium consumer / DTC",
+      "design_variance": 7,
+      "motion_intensity": 6,
+      "visual_density": 3
+    },
+    {
+      "id": "portfolio-designer-studio",
+      "kind": "use-case-preset",
+      "title": "Portfolio, designer or studio",
+      "design_variance": 8,
+      "motion_intensity": 7,
+      "visual_density": 3
+    },
+    {
+      "id": "portfolio-developer",
+      "kind": "use-case-preset",
+      "title": "Portfolio, developer",
+      "design_variance": 6,
+      "motion_intensity": 5,
+      "visual_density": 4
+    },
+    {
+      "id": "editorial-blog",
+      "kind": "use-case-preset",
+      "title": "Editorial or blog",
+      "design_variance": 6,
+      "motion_intensity": 4,
+      "visual_density": 3
+    },
+    {
+      "id": "public-sector-service",
+      "kind": "use-case-preset",
+      "title": "Public-sector or trust-first service",
+      "design_variance": 3,
+      "motion_intensity": 2,
+      "visual_density": 5
+    },
+    {
+      "id": "redesign-preserve",
+      "kind": "use-case-preset",
+      "title": "Redesign, preserve the existing brand",
+      "note": "Match the existing site's read on all three dials; motion_intensity may go one step higher than what was measured."
+    },
+    {
+      "id": "redesign-overhaul",
+      "kind": "use-case-preset",
+      "title": "Redesign, full visual overhaul",
+      "note": "design_variance and motion_intensity each go two steps above the existing site's read; visual_density stays matched to the existing site."
+    }
+  ]
+}

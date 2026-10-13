@@ -6,6 +6,7 @@
 - Design-system tokens and classes
 - DESIGN.md handoffs
 - Responsive CSS and sizing
+- Writing for the CMS that follows
 
 # 1. The drop contract
 
@@ -15,14 +16,29 @@ What the importer does with your file, in order:
    links, and scripts are not part of that tree, but inline `<style>` blocks are
    harvested from anywhere in the document before the head is removed.
 2. Harvests **inline `<script>` bodies** (`script:not([src])`) for analysis. In
-   editable import, `<script src="...">` is recorded and never executed because
-   f0 re-implements GSAP/Lottie playback. **Run as live sandbox** instead
-   preserves absolute HTTPS script dependencies.
+   editable import, a remote `<script src="https://...">` is recorded and never
+   executed because f0 re-implements GSAP/Lottie playback. **Run as live
+   sandbox** instead preserves absolute HTTPS script dependencies. A LOCAL
+   `<script src>` dropped with its file (folder or zip import) is inlined and
+   kept as an "Imported script" code element that runs in Preview and Export
+   only, on every page of the project (see motion-handoff.md, "Shapes that
+   convert but play differently").
 3. Runs two converters - CSS `@keyframes` and the GSAP subset (section 5) - and
    registers each result as a native f0 interaction.
 4. Anything a converter could not take is reported in the **Import Report** as a
    warning rather than silently mangled. Nothing is a mystery afterwards, but you
    have to look.
+5. Uploads every local asset it can see to project storage and rewrites the
+   reference to the hosted URL. It sees `img[src]`, `video[src]`,
+   `source[src]`, `poster`, linked stylesheets and scripts, and CSS `url()` in
+   `style` attributes and `<style>` blocks. **Nothing else.** A path inside a
+   `data-*` attribute (a JSON gallery list, `data-bg`, `data-src`) or inside a
+   script string is neither uploaded nor rewritten, so it points at nothing in
+   f0; `build-f0-export.mjs` doesn't bundle it either, and still reports every
+   asset resolved. Keep each asset in a real attribute: a script-driven
+   gallery keeps its photos as hidden `<img>` elements and reads `img.src`,
+   which also hands the script f0's hosted URL after import. The validator
+   warns on asset paths that appear only in `data-*` or inline scripts.
 
 For resources commonly placed in `<head>`:
 
@@ -68,12 +84,21 @@ are the opposite of browser defaults:
 - **`img, video { max-width: unset; object-fit: cover; object-position: center;
   }`** - media fills and crops by default rather than letterboxing.
 - **`input, button, select, textarea`** are stripped to nothing: no border, no
-  outline, transparent background, inherited colour, `cursor: pointer` on
+  outline, transparent background, inherited color, `cursor: pointer` on
   buttons, no resize on textareas, no native select arrow. Style them with
   `ds-input` / `ds-button` or your own rules - there is no UA chrome to remove.
 - **`summary { list-style: none }`** plus the webkit marker removed - the native
   `<details>` triangle is gone, so supply your own chevron.
 - **`[data-f0-id] { position: relative; min-width: 0; }`** on every element.
+  So every element is a containing block: an absolutely positioned child that
+  should anchor to a grandparent (a menu panel spanning the nav bar, not its
+  40px toggle) anchors to its parent instead. Give the in-between element
+  `position: static` with a selector of two classes or more
+  (`.site-nav-pill > .site-burger`); one class ties with the attribute rule.
+- **Lists and headings lose their UA look too**: `ol`/`ul` have no margins (the
+  `*` rule) and bare `h1`/`h2` are weight 400. State `margin-block` and
+  `font-weight` on anything that relied on them, or the page reads lighter
+  and tighter than your local build.
 - **`.page` / `.f0-page`** are `display: grid; width: 100vw; min-height: 900px;`
   with the body font.
 - **`a`** inherits the body font family and carries no underline (the `*` rule).
@@ -126,6 +151,16 @@ Also: `--radius-none|xs|sm|md|lg|xl|full` plus per-component `--radius-button`,
 `--gradient-primary|surface|text`; `--orb-color-1|2`;
 `--border-width-default|emphasis`; `--bp-mobile|tablet|desktop`;
 `--z-dropdown|sticky|modal|tooltip`.
+
+**A page only renders as designed if the project HAS these tokens.** When the
+DESIGN.md was not imported (or was imported into another project), every
+`var(--color-*)`, `var(--font-*)` and `var(--spacing-*)` resolves to nothing:
+white page, default font, collapsed spacing. The same goes for `ds-*` classes:
+they style only if the project's design system defines their rules, and
+`complete_design_system` deliberately holds back a class that elements already
+carry. Key elements (the primary CTA) should carry their own class with full
+styles rather than depend on `ds-button` alone. Check coverage after import (see
+references/after-import.md).
 
 **Never write `var(--x, #fff)`.** The fallback hides a missing token and freezes a
 value the design system is supposed to own. Adding a NEW `:root` variable is fine
@@ -287,6 +322,27 @@ Sections the spec has no slot for - shadows, transitions, breakpoints, z-index -
 belong in the prose (an "Elevation & Depth" or "Layout" section), or in the
 embedded CSS block if you need them to actually apply.
 
+## Prose that makes a DESIGN.md useful
+
+The front matter is what imports; the prose is what the in-app assistant reads
+as the brand's rules every time it generates or edits on this system. Keep both
+working:
+
+- Keep f0's own token keys in the front matter (`colors.primary`,
+  `rounded.md`, ...). The descriptive names belong in the prose, never in place
+  of the keys.
+- In the prose, give each color a descriptive name, its hex and its job, one per
+  line: "Deep Ink #18181B - body text", "Signal Lime #C6F432 - the one call to
+  action per screen". A name plus a role tells a reader when to reach for it; a
+  bare hex does not.
+- Describe each component in plain words: its shape (pill, soft square, sharp),
+  its edge (hairline border, none), its elevation (flat, offset block shadow,
+  soft shadow) and how it responds (lifts on hover, darkens on press).
+- End with a "Never" list: the treatments this brand bans (gradients on text,
+  drop shadows on cards, a second accent color, centered body copy, and so on).
+  A short, concrete list prevents more drift than a long description of what is
+  allowed.
+
 ---
 
 # 4. Responsive and the CSS rules
@@ -298,7 +354,13 @@ plain `@media (max-width: Npx)`. Each width-bound query becomes a page-scoped
 container query and a matching editor breakpoint, so it also works when the page
 is displayed inside a section narrower than the browser viewport.
 
-- Both `min-width` and `max-width` size conditions are preserved. Boundaries
+- Both `min-width` and `max-width` size conditions are preserved in current
+  source, BUT the packaged app that published a real handoff (2026-10-04)
+  flattened a `@media (min-width: 768px)` block into a base rule, hiding a
+  phone-only element everywhere. Until that ships, write show/hide as a base
+  rule plus a `max-width` override (`.x { display: none }` then
+  `@media (max-width: 767px) { .x { display: block } }`), with the base rule
+  earlier in the file. Boundaries
   within one pixel of a standard f0 width snap to that standard width; the
   standard list is 320, 480, 767, 768, 1023, 1024, 1279, 1280, 1440, 1536, and
   1920px. Other values remain valid rather than being dropped.
@@ -342,12 +404,48 @@ Fluid first; a breakpoint is for when fluid is not enough.
   form wiring (`<label for>`, `aria-labelledby`, `aria-controls`), and SVG
   internal references (gradients, `clipPath`, `mask`, `filter`, `<use>`), which
   can only be referenced by id. Those ids carry no styles.
-- **Never `!important`.** f0's per-element rules already out-specify class rules,
-  and writing a selector replaces its rule wholesale, so there is nothing to fight.
-  If a style "won't take", a more specific rule is shadowing it.
+- **Never `!important`**, with one exception below. f0's per-element rules
+  already out-specify class rules, and writing a selector replaces its rule
+  wholesale, so there is nothing to fight. If a style "won't take", a more
+  specific rule is shadowing it.
+- **Never follow a selector group with a rule for one of its members** in the
+  same scope (`.a, .b { ... }` then `.b { ... }`). The importer gives every
+  selector in the group ONE shared declaration list and merges the later rule
+  into it, so `.b`'s override lands on `.a` too. On a real handoff this
+  collapsed a phone grid, turned a plus icon into a dash and put two masks in
+  phase. Write one full rule per selector instead. Bare element groups
+  (`h1, h2, ...`) are handled separately and are fine.
+- **No top-level `@starting-style` or `@supports`.** The rule store flattens
+  both: `@starting-style`'s entry state becomes the element's permanent state
+  (an open menu stuck at opacity 0), and an `@supports` condition is dropped
+  so its rules always apply. Put `@starting-style` inside
+  `@media (prefers-reduced-motion: no-preference) { ... }` (shipped verbatim)
+  with extra specificity on its selectors.
+- **Non-size media blocks land before the page CSS.** `@media
+  (prefers-reduced-motion: ...)`, `(hover: ...)`, `print` and similar ship
+  verbatim as global CSS emitted AHEAD of the page's rules, so an override in
+  them loses to an equal-specificity base rule. In
+  `@media (prefers-reduced-motion: reduce)` mark the declarations
+  `!important` (the exception), or better, put motion only in a
+  `no-preference` block so there is nothing to undo. Those blocks also never
+  render on the editor canvas, only in Preview and Export.
+- **No `-webkit-mask-composite`.** It is renamed to `mask-composite` with its
+  webkit value (`source-in`, `xor`), which is invalid there. Use the standard
+  `mask` / `mask-composite` (`intersect`, `exclude`) only.
+- **Put `@font-face` before any comment** if you package with an older
+  `build-f0-export.mjs`: older versions read a leading comment as part of the
+  first rule's selector, and a word like `DESIGN.md` looked like a class, so
+  the font file was left out of the export. Current versions strip comments
+  first.
 - **Never write `opacity: 0` or `display: none` into persistent CSS on an animated
   element.** Let the runtime own the starting state, or it stays invisible when the
   animation does not run.
+- **The published HTML is pretty-printed.** Every element starts on its own
+  indented line, so whitespace now sits between siblings that had none in your
+  file. Inline and inline-block children render it as a space: letters split
+  into `<span>`s read "S t o p" and the heading wraps. Make such a parent
+  `display: inline-flex` / `flex` (flex ignores whitespace-only text), never
+  rely on "no space between tags".
 - **Inline styles are the exception**, for a value that genuinely cannot be a class
   (a measured pixel height for a collapse). A whole design expressed as inline
   hardcoded styles defeats the design system entirely.
@@ -355,7 +453,28 @@ Fluid first; a breakpoint is for when fluid is not enough.
   rule exists IS the brief. Never strip a class for being undefined - that includes
   state classes (`.is-open`, `.is-active`, `.is-sticky`).
 
+## Pages publish flat; link to them by their published names
+
+A published site has no folders: every page is `<site>/<page-name>.html` at the
+root, and the homepage is `index.html` only (`homepage.html` 404s). The import
+does not rewrite links between pages (`build-f0-export.mjs` rewrites asset
+paths only), so:
+
+- name the homepage file `index.html` and link it as `./index.html`;
+- keep every page at the project root (`blog/post.html` publishes as
+  `post.html`, and both `./blog/post.html` and the post's own parent-folder links
+  break);
+- after publishing, request every internal link and expect 200.
+
 ## RTL
+
+**Put the direction on your own top-level wrapper**, e.g. `.page-main {
+direction: rtl; }` on the `<main>`. A published f0 page is served as `<html
+lang="en">` with no `dir`, and f0's page wrapper (where the editor keeps the
+page's own `direction`) is not published - `<main>` sits straight under `<body>`.
+`dir="rtl"` on `<html>` in the source, or `direction` on the page root, works in
+the editor and is gone on the live site: the whole page flips to LTR. The same
+goes for anything else page-level (background, font): set it on your wrapper.
 
 If the content may run right-to-left, use logical properties - `inset-inline`,
 `margin-inline`, `padding-inline`, `border-inline` - not `left`/`right`. In motion,
@@ -365,4 +484,67 @@ mirror the sign and the origin: shift by `dir * (rtl ? 34 : -34)`, use
 ArrowRight. Read direction from the DOM (`root.dir === 'rtl'`), not a build-time
 guess.
 
----
+# 5. Write for the CMS that follows
+
+Once a project is wired to a CMS (the WordPress flowmo theme, or f0's own
+content lists), the content is edited there, not in your source. These rules
+come from a real site that broke in production after its first CMS editing
+session, while the f0 Preview and the staging publish were both fine.
+
+- **Nothing lives inside an element the CMS binds as text.** Connecting the
+  CMS (`cms_auto_connect`) binds each text element as ONE text field holding
+  its text content, and every child element inside it is gone from then on;
+  later CMS edits save plain text too. That killed count-up spans
+  (`<p class="stat"><span class="stat-num">88</span><span>%</span></p>` became
+  the field value `88 %`), the FAQ "+" icon span inside a `<summary>` bound as
+  the question, a typewriter caret span, and a title nested in a text block.
+  Animations aimed at them then target nothing, silently. Make each part its
+  own sibling element:
+
+  ```html
+  <div class="stat-value">
+    <span class="stat-num">88</span><span class="stat-suffix">%</span>
+  </div>
+  ```
+
+  Here the number and the suffix are separate fields, and the wrapper is
+  never a text field. Draw decorative marks (icons, carets, bullets) with CSS
+  pseudo-elements on the element itself (`.faq-trigger::after`), which no
+  binding or edit can remove. After connecting, read `get_cms_state` and check
+  which element each text field is attached to.
+- **WordPress rich-text fields run `wpautop`.** A rich-text (`wysiwyg`) field
+  goes through WordPress's automatic paragraphs on output: every newline in
+  the stored HTML becomes a `<br>` and loose text is wrapped in `<p>`. Exported
+  HTML has a newline between tags, so a legal page came out as
+  `<span>...</span><br><strong>Applicant</strong><br><span>...</span>` (each
+  defined term on its own line), every link and list item gained `<br>`s
+  (text broken a word per line, empty numbered items), and a `<p>` holding a
+  `<strong>` was wrapped into a `<p>` inside a `<p>`, which the browser splits,
+  so the line falls outside its own selector. Before a rich-text field ships:
+  - store its value with no whitespace between tags, or turn off automatic
+    paragraphs on that field;
+  - prefer plain text fields and plain markup for anything that is not
+    long-form prose;
+  - check the published HTML of every rich-text field for injected `<br>` and
+    nested `<p>`.
+- **Build every repeated item as one uniform template.** Repeated cards, FAQ
+  items, logos and team members are turned into a CMS list that renders one
+  template for every item. Per-item classes (`.tile-acme { background: ... }`)
+  and per-item ids do not survive. Any per-item difference must come from a
+  field the list can hold (an image, a colour value), or from a CSS selector
+  on the content itself (`.tile:has(img[src*="acme"])`).
+- **Header and footer content is per page.** The shared header/footer keep one
+  element id on every page, but their text and links are stored per page. The
+  homepage was filled in and every other page published an empty logo `href`,
+  an Apply button with no text, and an empty newsletter card. Keep the chrome's
+  content minimal and identical. After the CMS is wired, open EVERY page and
+  check the chrome, not just the homepage.
+- **Nothing important may rely on an imported script or local-only CSS.**
+  Imported scripts run in f0 Preview but are not published to WordPress
+  (marquee drag/pause, a video pause button and Lenis all vanished). CSS that
+  f0 replaces (a scroll-snap or coverflow track under f0's carousel) never
+  applies. Ship the behaviour natively, or plan its WordPress-side injection
+  before launch.
+- **Plan scroll length per device.** A pinned scroll story measured in `vh`
+  is as long on a phone as on a desktop (one ran to about 2,300 screen
+  heights). Give the range markers shorter heights under 767px.

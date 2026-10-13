@@ -1,0 +1,431 @@
+{
+  "schema": "flowmo-gen-video-motion-graphics/glossary@1",
+  "items": [
+    {
+      "id": "decelerate-in",
+      "title": "Decelerate in",
+      "definition": "Fast on the first frames, dead stop on the last. The curve every arriving element takes, and the default this package assumes when a phase says nothing.",
+      "family": "ease"
+    },
+    {
+      "id": "accelerate-out",
+      "title": "Accelerate out",
+      "definition": "Slow to leave, quick to be gone. The curve for anything exiting, and it runs shorter than the entrance that put the element there.",
+      "family": "ease"
+    },
+    {
+      "id": "symmetric-ease",
+      "title": "Symmetric ease",
+      "definition": "Slow at both ends. Right for a camera travelling between two resting positions, sluggish on anything that has to arrive.",
+      "family": "ease"
+    },
+    {
+      "id": "constant-speed",
+      "title": "Constant speed",
+      "definition": "No acceleration anywhere. Correct for a turn, a continuous pass or a scroll; reads mechanical the moment it is used for an entrance.",
+      "family": "ease"
+    },
+    {
+      "id": "attack",
+      "title": "Attack",
+      "definition": "The opening frames of a move, where most of its speed sits. A soft attack is the single commonest reason a rendered move reads as machine-made.",
+      "family": "ease"
+    },
+    {
+      "id": "settle",
+      "title": "Settle",
+      "definition": "The tail of a move where speed dies and the element parks. Its length is most of the difference between motion that was directed and motion that defaulted.",
+      "family": "ease"
+    },
+    {
+      "id": "overshoot",
+      "title": "Overshoot",
+      "definition": "Passing the target and coming back once. Reserved for small playful elements; applied to a headline it cheapens the whole frame.",
+      "family": "ease"
+    },
+    {
+      "id": "oscillation",
+      "title": "Oscillation",
+      "definition": "Crossing the target repeatedly before resting. At most one in a film, and never on type.",
+      "family": "ease"
+    },
+    {
+      "id": "step",
+      "title": "Step",
+      "definition": "A value that holds flat and then jumps. What makes a pause a beat with a measured length instead of a hole in the timeline.",
+      "family": "ease"
+    },
+    {
+      "id": "ease-character",
+      "title": "Ease character",
+      "definition": "The one sentence in MOTION RULES saying how everything in this film accelerates. Stated once, it stops each phase from inventing its own physics.",
+      "family": "ease"
+    },
+    {
+      "id": "type-as-hero",
+      "title": "Type as hero",
+      "definition": "Making the words the subject of the shot: very few of them, very large, with the composition built around them. The only arrangement in which generated type is dependably correct.",
+      "family": "type"
+    },
+    {
+      "id": "accent-word",
+      "title": "Accent word",
+      "definition": "The one word in a line that carries the emphasis, marked by weight, color or its own move. Two accents in one line is no accent.",
+      "family": "type"
+    },
+    {
+      "id": "letter-cascade",
+      "title": "Letter cascade",
+      "definition": "Characters resolving one after another rather than together. Keep the whole cascade under roughly half a second or the line stops reading as a line.",
+      "family": "type"
+    },
+    {
+      "id": "mask-rise",
+      "title": "Mask rise",
+      "definition": "Words or lines lifting out of their own clip box so they appear rather than fade. The move a title card actually makes.",
+      "family": "type"
+    },
+    {
+      "id": "marker-swipe",
+      "title": "Marker swipe",
+      "definition": "A colored bar growing out from one edge behind a phrase, roughly a fifth of a second, origin on the leading edge. The cheapest emphasis that still looks designed.",
+      "family": "type"
+    },
+    {
+      "id": "outline-then-fill",
+      "title": "Outline then fill",
+      "definition": "Building a word as hollow letterforms and then flooding color through them in reading order. Reads as construction rather than as appearance.",
+      "family": "type"
+    },
+    {
+      "id": "blur-resolve",
+      "title": "Blur resolve",
+      "definition": "Type arriving out of softness into crispness. Half a second is the entire budget; longer and a viewer reads it as a focus fault.",
+      "family": "type"
+    },
+    {
+      "id": "snap-up",
+      "title": "Snap up",
+      "definition": "A short rise into place, decelerating to a stop with no rebound. The workhorse entrance for flat type and the safest thing to ask a video model for.",
+      "family": "type"
+    },
+    {
+      "id": "step-reveal",
+      "title": "Step reveal",
+      "definition": "Characters or blocks appearing on a fixed interval with no in-between motion. Suits monospaced and technical type, where smoothness looks wrong.",
+      "family": "type"
+    },
+    {
+      "id": "smear",
+      "title": "Smear",
+      "definition": "The drawn streak that stands in for motion blur in flat work. It is drawn as shape, not applied as blur, and asking for blur instead gives mush.",
+      "family": "type"
+    },
+    {
+      "id": "squash-and-stretch",
+      "title": "Squash and stretch",
+      "definition": "Deforming an element along its travel and recovering the shape on arrival. Gives weight to playful work and looks like a fault everywhere else.",
+      "family": "type"
+    },
+    {
+      "id": "type-scale-rule",
+      "title": "Type scale rule",
+      "definition": "The stated relationship between the largest and smallest readable thing in the film. Without one the model drifts a headline down toward caption size between phases.",
+      "family": "type"
+    },
+    {
+      "id": "copy-list",
+      "title": "Copy list",
+      "definition": "The single inventory of every readable string in the film, phase by phase, spelled as it must appear. It is what catches a name left over from an earlier version, and it is what the review reads the frames against.",
+      "family": "type"
+    },
+    {
+      "id": "composited-type",
+      "title": "Composited type",
+      "definition": "Type produced outside the video model and laid over a clean generated plate. The answer for anything small, listed or legally exact, and the route has to be named in the plan.",
+      "family": "type"
+    },
+    {
+      "id": "locked-frame",
+      "title": "Locked frame",
+      "definition": "The camera does not move; elements move inside it. The default for type-led work and the only honest way to promise a stable composition.",
+      "family": "camera"
+    },
+    {
+      "id": "push",
+      "title": "Push",
+      "definition": "Travel toward the subject along the lens axis. Reads as attention narrowing, so it belongs where the film is closing in on its point.",
+      "family": "camera"
+    },
+    {
+      "id": "pull",
+      "title": "Pull",
+      "definition": "Travel away from the subject along the lens axis. Reads as context arriving, so it belongs where the film is revealing where it was.",
+      "family": "camera"
+    },
+    {
+      "id": "track",
+      "title": "Track",
+      "definition": "Travel sideways past the subject, the frame keeping pace. The move for a row, a queue or a tunnel of parts.",
+      "family": "camera"
+    },
+    {
+      "id": "pan",
+      "title": "Pan",
+      "definition": "Rotation across from a fixed position. Not the same as a track: the parallax is different and asking for one and describing the other confuses the render.",
+      "family": "camera"
+    },
+    {
+      "id": "tilt",
+      "title": "Tilt",
+      "definition": "Rotation up or down from a fixed position. The move for revealing height or depth in a stack.",
+      "family": "camera"
+    },
+    {
+      "id": "orbit",
+      "title": "Orbit",
+      "definition": "Circling a subject that stays centred. The clearest way to show an object is solid.",
+      "family": "camera"
+    },
+    {
+      "id": "counter-orbit",
+      "title": "Counter orbit",
+      "definition": "Reversing the direction of an orbit at a phase boundary. Marks an assembly turning into its result without needing a cut.",
+      "family": "camera"
+    },
+    {
+      "id": "handheld-drift",
+      "title": "Handheld drift",
+      "definition": "Small continuous unsteadiness added on purpose. Warms a live-action look and ruins a graphic one, so it is never a default.",
+      "family": "camera"
+    },
+    {
+      "id": "one-move-rule",
+      "title": "One move rule",
+      "definition": "One camera behaviour per phase. Two named moves in the same phase are averaged into a third that is neither, and the fix is a phase boundary between them.",
+      "family": "camera"
+    },
+    {
+      "id": "persistence-lock",
+      "title": "Persistence lock",
+      "definition": "The instruction that anything already arrived stays exactly where it landed for the rest of the film. Omit it and landed elements quietly reposition between seconds.",
+      "family": "camera"
+    },
+    {
+      "id": "identity-anchor",
+      "title": "Identity anchor",
+      "definition": "The reference image that makes the subject this specific product, person or building instead of a convincing generic one. Described identity always drifts; anchored identity holds.",
+      "family": "camera"
+    },
+    {
+      "id": "cut",
+      "title": "Cut",
+      "definition": "An instant change of composition on a frame boundary. The default join in this package, because it is the one a video model executes cleanly.",
+      "family": "cut"
+    },
+    {
+      "id": "match-cut",
+      "title": "Match cut",
+      "definition": "A cut where a shape, a direction or a movement carries across the boundary. The cheapest way to make a set of phases read as one film.",
+      "family": "cut"
+    },
+    {
+      "id": "motivated-cut",
+      "title": "Motivated cut",
+      "definition": "A cut caused by something visible in the outgoing frame: a part leaving, a hand closing, a panel filling. An unmotivated cut is where a film starts feeling assembled.",
+      "family": "cut"
+    },
+    {
+      "id": "seam",
+      "title": "Seam",
+      "definition": "The join you did not want: a jump in position, grain or color where two pieces were meant to read as continuous. Position matching alone does not remove one.",
+      "family": "cut"
+    },
+    {
+      "id": "dissolve",
+      "title": "Dissolve",
+      "definition": "Two compositions overlapping in opacity through a join. Off by default here, because it is what a film does when nobody chose a transition.",
+      "family": "cut"
+    },
+    {
+      "id": "continuous-take",
+      "title": "Continuous take",
+      "definition": "A film with no cuts at all, phases flowing through one another. Powerful and expensive: one bad second cannot be replaced without regenerating everything.",
+      "family": "cut"
+    },
+    {
+      "id": "whip",
+      "title": "Whip",
+      "definition": "A very fast camera move used as a join, the blur hiding the change of composition. One per film at most; it is a trick and it wears out immediately.",
+      "family": "cut"
+    },
+    {
+      "id": "position-jump",
+      "title": "Position jump",
+      "definition": "A subject moving between two frames that were supposed to be adjacent. The specific failure caused by chaining on a re-render instead of on the real last frame.",
+      "family": "cut"
+    },
+    {
+      "id": "takeaway",
+      "title": "Takeaway",
+      "definition": "One sentence naming the thing a viewer should be able to say back once the film has ended. Written before any phase exists, because a film assembled from attractive phases with no takeaway has no repair left at the finishing stage.",
+      "family": "structure"
+    },
+    {
+      "id": "mechanic",
+      "title": "Mechanic",
+      "definition": "The one logic a film runs on: type accumulating, parts separating, paper rearranging, panels resolving. A film that changes its mechanic halfway is two films.",
+      "family": "structure"
+    },
+    {
+      "id": "phase",
+      "title": "Phase",
+      "definition": "A named span with its own action, its own camera and its own length, contiguous with its neighbours. Editorial unit, never a separate generation job.",
+      "family": "structure"
+    },
+    {
+      "id": "stagger",
+      "title": "Stagger",
+      "definition": "One move applied to several elements offset in time. Asked for once on the group, never written out per element.",
+      "family": "structure"
+    },
+    {
+      "id": "stagger-spread",
+      "title": "Stagger spread",
+      "definition": "The total span of a stagger across all elements, whatever their number, as opposed to a fixed gap between neighbours. The right control when the count is not fixed, because with a fixed gap a nine-item row takes three times a three-item one and the phase length stops meaning anything.",
+      "family": "structure"
+    },
+    {
+      "id": "overlap",
+      "title": "Overlap",
+      "definition": "Starting a phase before the previous one has finished settling. Phases laid strictly end to end read as a queue rather than a film.",
+      "family": "structure"
+    },
+    {
+      "id": "snap",
+      "title": "Snap",
+      "definition": "A move short enough to have no settle, for something that clicks into position. The right shape for a mark landing and the wrong shape for a subject arriving.",
+      "family": "structure"
+    },
+    {
+      "id": "hold",
+      "title": "Hold",
+      "definition": "A run of identical frames with a chosen length. It is a design decision, not the absence of motion, and it is not a fade.",
+      "family": "structure"
+    },
+    {
+      "id": "reading-hold",
+      "title": "Reading hold",
+      "definition": "A hold sized by the copy that has to be read inside it at delivery size, not by what is left in the timeline. If the copy does not fit, the copy is cut. Any motion inside it makes it a failed hold.",
+      "family": "structure"
+    },
+    {
+      "id": "final-hold",
+      "title": "Final hold",
+      "definition": "The repeated frame a film ends on. A sound tail may decay across it, which resolves the film without lengthening it.",
+      "family": "structure"
+    },
+    {
+      "id": "endcard",
+      "title": "Endcard",
+      "definition": "A built closing composition, typically a mark plus one line, which finishes assembling before the film ends and then stops. An endcard still moving at the last frame has failed.",
+      "family": "structure"
+    },
+    {
+      "id": "loop",
+      "title": "Loop",
+      "definition": "A film whose last frame equals its first, so the wrap is invisible. A final hold is not a loop, and a one-shot action forced back to its opening pose rubber-bands.",
+      "family": "structure"
+    },
+    {
+      "id": "un-plot",
+      "title": "Un-plot",
+      "definition": "Ending by retracting the film to the empty state it opened on, in reverse of how it was built. Reads as authored precisely because the order is preserved.",
+      "family": "structure"
+    },
+    {
+      "id": "conclusion-ending",
+      "title": "Conclusion ending",
+      "definition": "Ending on the answer to the question the film opened with, with at most one small thing still alive. The ending kind for explainers.",
+      "family": "structure"
+    },
+    {
+      "id": "source-continuity-ending",
+      "title": "Source continuity ending",
+      "definition": "Ending on the footage carrying on with its own action after the graphics have cleared. The ending kind for anything laid over real material.",
+      "family": "structure"
+    },
+    {
+      "id": "retime-map",
+      "title": "Retime map",
+      "definition": "The explicit statement of how a film authored at one length becomes another: which phases are multiplied, which are re-authored, which holds keep their length. A film without one has been stretched, not retimed.",
+      "family": "structure"
+    },
+    {
+      "id": "duration-ladder",
+      "title": "Duration ladder",
+      "definition": "The discrete lengths a given model actually accepts. A wanted length off the ladder is coerced to the nearest rung, and the film has to be told.",
+      "family": "structure"
+    },
+    {
+      "id": "frame-exact-boundary",
+      "title": "Frame-exact boundary",
+      "definition": "A phase boundary that lands on a whole frame. At thirty frames a second every tenth of a second qualifies and a quarter of a second does not.",
+      "family": "structure"
+    },
+    {
+      "id": "one-film-one-request",
+      "title": "One film, one request",
+      "definition": "All phases and all shared rules go in a single generation. A provider error is not evidence that the length or the phase count is unsupported, and splitting needs a verified cause and cuts only on real boundaries.",
+      "family": "structure"
+    },
+    {
+      "id": "style-key",
+      "title": "Style key",
+      "definition": "The one reference image, plus the byte-identical style paragraph, carried on every clip of a series. Attaching it only to the first clip is how a series drifts apart.",
+      "family": "structure"
+    },
+    {
+      "id": "departure",
+      "title": "Departure",
+      "definition": "A deliberate deviation from the chosen look, written down with its reason. An unrecorded departure cannot be told apart from a failure.",
+      "family": "structure"
+    },
+    {
+      "id": "soundscape",
+      "title": "Soundscape",
+      "definition": "The effects layer, each sound named together with the visible event that produces it. Effects with no visible cause are what make a film feel dubbed.",
+      "family": "audio"
+    },
+    {
+      "id": "score",
+      "title": "Score",
+      "definition": "The instrumental bed: character, tempo, where it lifts, how it stops. Default for launch and motion work, alongside effects and without narration.",
+      "family": "audio"
+    },
+    {
+      "id": "sync-point",
+      "title": "Sync point",
+      "definition": "A frame where a sound and a visible event must coincide. Name the frames that matter rather than asking for everything to be in time.",
+      "family": "audio"
+    },
+    {
+      "id": "sound-tail",
+      "title": "Sound tail",
+      "definition": "Audio decaying across a still final frame. It finishes the film without adding length to it.",
+      "family": "audio"
+    },
+    {
+      "id": "narration",
+      "title": "Narration",
+      "definition": "Spoken words written for the film. Always a separate explicit decision, never a default, and no voice is ever cloned.",
+      "family": "audio"
+    },
+    {
+      "id": "explicit-silence",
+      "title": "Explicit silence",
+      "definition": "A stated decision that the film has no audio at all. It beats every default in this package.",
+      "family": "audio"
+    }
+  ]
+}

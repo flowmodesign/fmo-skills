@@ -1,0 +1,317 @@
+{
+  "schema": "flowmo-reference-boards/board-picks@1",
+  "items": [
+    {
+      "id": "theme-pristine-light",
+      "axis": "theme_paradigm",
+      "title": "Pristine Light",
+      "description": "Paper, cream, off-white grounds with dark ink text. Airy, editorial, high-contrast on white rather than a dark-mode default."
+    },
+    {
+      "id": "theme-deep-dark",
+      "axis": "theme_paradigm",
+      "title": "Deep Dark",
+      "description": "Charcoal and graphite grounds. Overused as a default - only pick this when it carries a real twist (unusual accent, texture, or light treatment), not as the safe choice."
+    },
+    {
+      "id": "theme-bold-studio-solid",
+      "axis": "theme_paradigm",
+      "title": "Bold Studio Solid",
+      "description": "A decisive solid color field - oxblood, royal blue, forest, vermilion, emerald - carrying the whole page rather than a neutral ground plus accent."
+    },
+    {
+      "id": "theme-quiet-premium-neutral",
+      "axis": "theme_paradigm",
+      "title": "Quiet Premium Neutral",
+      "description": "Bone, sand, taupe, stone, smoke. Restrained and material-led rather than stark light or dark."
+    },
+    {
+      "id": "background-technical-grid",
+      "axis": "background_character",
+      "title": "Technical grid / dot field",
+      "description": "A faint structural grid or dot field reads as precision-engineered rather than decorative."
+    },
+    {
+      "id": "background-soft-ambient-depth",
+      "axis": "background_character",
+      "title": "Solid with soft ambient depth",
+      "description": "A near-solid ground with subtle gradient or light falloff for depth, no hard graphic elements."
+    },
+    {
+      "id": "background-full-bleed-cinematic",
+      "axis": "background_character",
+      "title": "Full-bleed cinematic imagery",
+      "description": "Photographic or rendered imagery fills the section edge to edge; copy sits in the image's negative space."
+    },
+    {
+      "id": "background-tactile-material",
+      "axis": "background_character",
+      "title": "Tactile paper / material texture",
+      "description": "A physical-material texture (paper grain, fabric, stone) grounds the section instead of a flat digital fill."
+    },
+    {
+      "id": "type-clean-grotesk",
+      "axis": "typography_character",
+      "title": "Clean grotesk",
+      "description": "Satoshi-like: a neutral, contemporary sans with even proportions - reads modern without a strong personality of its own."
+    },
+    {
+      "id": "type-refined-grotesk",
+      "axis": "typography_character",
+      "title": "Refined grotesk",
+      "description": "Neue-Montreal-like: a more considered, slightly humanist grotesk with subtle warmth over a purely mechanical sans."
+    },
+    {
+      "id": "type-expressive-display",
+      "axis": "typography_character",
+      "title": "Expressive display",
+      "description": "Cabinet/Clash-like: a characterful display face with real personality, used for headlines to carry the brand voice."
+    },
+    {
+      "id": "type-compressed-statement",
+      "axis": "typography_character",
+      "title": "Compressed statement",
+      "description": "Monument-like: a tall, narrow, high-impact face for oversized headline moments."
+    },
+    {
+      "id": "type-editorial-serif-sans-pairing",
+      "axis": "typography_character",
+      "title": "Editorial serif + sans pairing",
+      "description": "A serif for headlines or pull quotes paired with a sans for body and UI - a magazine register."
+    },
+    {
+      "id": "type-swiss-rational-sans",
+      "axis": "typography_character",
+      "title": "Swiss rational sans with hard hierarchy",
+      "description": "A grid-disciplined sans with sharply stepped size/weight jumps and little ornament."
+    },
+    {
+      "id": "hero-cinematic-centered-minimalist",
+      "axis": "hero_architecture",
+      "title": "Cinematic centered minimalist",
+      "description": "Centered headline over a strong single visual, generous negative space, minimal chrome."
+    },
+    {
+      "id": "hero-asymmetric-split",
+      "axis": "hero_architecture",
+      "title": "Asymmetric split",
+      "description": "Unequal left/right (or top/bottom) division between copy and visual - never a 50/50 default split."
+    },
+    {
+      "id": "hero-floating-polaroid-scatter",
+      "axis": "hero_architecture",
+      "title": "Floating polaroid scatter",
+      "description": "Multiple framed image tiles scattered/overlapping around the headline, giving a tactile, collected feel."
+    },
+    {
+      "id": "hero-inline-typography-behemoth",
+      "axis": "hero_architecture",
+      "title": "Inline typography behemoth",
+      "description": "Oversized type IS the hero visual - little or no separate imagery, type carries the whole composition."
+    },
+    {
+      "id": "hero-editorial-offset",
+      "axis": "hero_architecture",
+      "title": "Editorial offset",
+      "description": "Magazine-style offset grid where headline, subhead, and visual sit in deliberately uneven columns."
+    },
+    {
+      "id": "hero-massive-image-first",
+      "axis": "hero_architecture",
+      "title": "Massive image-first, restrained text",
+      "description": "One huge image dominates; text is a small, confident accent rather than competing for space."
+    },
+    {
+      "id": "hero-scale-giant-statement",
+      "axis": "hero_scale",
+      "title": "Giant statement",
+      "description": "The headline fills most of the first screen at display scale; the visual supports it. Pair with type-led hero architectures and a short, punchy line."
+    },
+    {
+      "id": "hero-scale-mid-editorial",
+      "axis": "hero_scale",
+      "title": "Mid editorial",
+      "description": "Headline at a confident but readable size sharing the first screen with a real visual and a short lead; the default for most product and content pages."
+    },
+    {
+      "id": "hero-scale-mini-minimalist",
+      "axis": "hero_scale",
+      "title": "Mini minimalist",
+      "description": "Small, quiet headline with wide empty ground or one dominant image; restraint is the statement. Pair with image-first or minimalist briefs."
+    },
+    {
+      "id": "section-modular-bento-rhythm",
+      "axis": "section_system",
+      "title": "Modular bento rhythm",
+      "description": "Repeating grid of variable-size tiles/cards, bento-box style, across the page."
+    },
+    {
+      "id": "section-alternating-editorial-blocks",
+      "axis": "section_system",
+      "title": "Alternating editorial blocks",
+      "description": "Sections alternate text-left/image-right and the reverse, magazine-spread style."
+    },
+    {
+      "id": "section-poster-stacked-storytelling",
+      "axis": "section_system",
+      "title": "Poster-stacked storytelling",
+      "description": "Each section reads as its own full-bleed poster moment, stacked vertically as a sequence."
+    },
+    {
+      "id": "section-gallery-led-cadence",
+      "axis": "section_system",
+      "title": "Gallery-led cadence",
+      "description": "Image-forward sections paced like a gallery walk, with copy as captions rather than the lead."
+    },
+    {
+      "id": "section-swiss-grid-discipline",
+      "axis": "section_system",
+      "title": "Swiss grid discipline",
+      "description": "A visible, consistent column grid governs every section - alignment is the whole personality."
+    },
+    {
+      "id": "section-asymmetric-premium-flow",
+      "axis": "section_system",
+      "title": "Asymmetric premium flow",
+      "description": "Sections vary width, alignment, and rhythm deliberately rather than repeating one template."
+    },
+    {
+      "id": "signature-diagonal-staggered-masonry",
+      "axis": "signature_component",
+      "title": "Diagonal staggered masonry",
+      "description": "A tile grid staggered off the horizontal for tension instead of a flat masonry wall."
+    },
+    {
+      "id": "signature-3d-cascading-card-deck",
+      "axis": "signature_component",
+      "title": "3D cascading card deck",
+      "description": "Cards fan out with depth/perspective like a dealt deck rather than a flat stack."
+    },
+    {
+      "id": "signature-hover-accordion-slices",
+      "axis": "signature_component",
+      "title": "Hover-accordion slices",
+      "description": "Vertical slices that expand on hover to reveal content, collapsing the rest."
+    },
+    {
+      "id": "signature-gapless-bento",
+      "axis": "signature_component",
+      "title": "Gapless bento",
+      "description": "A bento grid with zero gutters, relying on internal padding and dividers for structure."
+    },
+    {
+      "id": "signature-brand-marquee",
+      "axis": "signature_component",
+      "title": "Brand marquee",
+      "description": "A scrolling/looping strip of logos, words, or proof points as a horizontal band."
+    },
+    {
+      "id": "signature-turning-polaroid-arc",
+      "axis": "signature_component",
+      "title": "Turning polaroid arc",
+      "description": "Framed images arranged along a gentle arc, each slightly rotated, like a fanned photo set."
+    },
+    {
+      "id": "signature-vertical-rhythm-lines",
+      "axis": "signature_component",
+      "title": "Vertical rhythm lines",
+      "description": "Thin vertical rules running through sections to mark rhythm/measurement, editorial-technical feel."
+    },
+    {
+      "id": "signature-off-grid-editorial",
+      "axis": "signature_component",
+      "title": "Off-grid editorial",
+      "description": "A deliberate break from the grid for one component to create a focal moment."
+    },
+    {
+      "id": "signature-product-ui-panel-stack",
+      "axis": "signature_component",
+      "title": "Product UI panel stack",
+      "description": "Layered mock product-UI panels stacked with depth, used when the brief is a product with a UI."
+    },
+    {
+      "id": "signature-split-testimonial-wall",
+      "axis": "signature_component",
+      "title": "Split testimonial wall",
+      "description": "Testimonials arranged in an uneven multi-column wall rather than a single centered carousel."
+    },
+    {
+      "id": "signature-oversized-metrics-strip",
+      "axis": "signature_component",
+      "title": "Oversized metrics strip",
+      "description": "A band of large numerals/stats as a standalone proof section."
+    },
+    {
+      "id": "signature-layered-image-crop-frames",
+      "axis": "signature_component",
+      "title": "Layered image crop frames",
+      "description": "Overlapping cropped image frames at different depths/scales within one composition."
+    },
+    {
+      "id": "narrative-artifact-collectible",
+      "axis": "narrative_spine",
+      "title": "Artifact / collectible",
+      "description": "The product/brand is framed as a precious object to be examined and collected."
+    },
+    {
+      "id": "narrative-journey-waypoints",
+      "axis": "narrative_spine",
+      "title": "Journey / waypoints",
+      "description": "The page reads as stops along a path, each section a waypoint in a larger route."
+    },
+    {
+      "id": "narrative-tool-precision-instrument",
+      "axis": "narrative_spine",
+      "title": "Tool / precision instrument",
+      "description": "Technical, instrument-panel framing - the product as a precise tool, not a lifestyle object."
+    },
+    {
+      "id": "narrative-living-system-garden",
+      "axis": "narrative_spine",
+      "title": "Living system / garden",
+      "description": "Organic, growth-oriented framing - the product/brand as something cultivated over time."
+    },
+    {
+      "id": "narrative-stage-spotlight",
+      "axis": "narrative_spine",
+      "title": "Stage / spotlight",
+      "description": "Theatrical framing - each section is a spotlighted moment on a dark or neutral stage."
+    },
+    {
+      "id": "narrative-archive-dossier",
+      "axis": "narrative_spine",
+      "title": "Archive / dossier",
+      "description": "Documentary, case-file framing - content presented as evidence in a dossier."
+    },
+    {
+      "id": "second-read-asymmetric-bleed",
+      "axis": "second_read_moment",
+      "title": "Asymmetric bleed",
+      "description": "One element deliberately bleeds off the grid/edge where nothing else does, creating a single surprise."
+    },
+    {
+      "id": "second-read-oversized-numeral",
+      "axis": "second_read_moment",
+      "title": "Oversized numeral or punctuation as structure",
+      "description": "A single giant numeral or punctuation mark used as a structural/layout device, not just decoration."
+    },
+    {
+      "id": "second-read-material-switch",
+      "axis": "second_read_moment",
+      "title": "One material switch",
+      "description": "Exactly one section swaps the page's material language (texture, finish) to mark a turn in the story."
+    },
+    {
+      "id": "second-read-side-rail-note",
+      "axis": "second_read_moment",
+      "title": "Narrow vertical side-rail note",
+      "description": "A thin marginal column carrying an annotation, aside, or footnote-style detail."
+    },
+    {
+      "id": "second-read-macro-crop-brand-color",
+      "axis": "second_read_moment",
+      "title": "Macro crop carrying the brand color",
+      "description": "An extreme close-up crop used once, saturated in the brand's accent color, as a texture break."
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "schema": "flowmo-brand-lock/template@1",
+  "items": [
+    {
+      "id": "brand-lock",
+      "title": "Brand Lock",
+      "fields": {
+        "version": 1,
+        "brand_context": {
+          "name": "",
+          "offering": "",
+          "industry": "",
+          "positioning": "",
+          "audience": "",
+          "tone": []
+        },
+        "concept": {
+          "visual_premise": "",
+          "central_mechanism": "",
+          "reference_signals": [],
+          "avoid": []
+        },
+        "visual_axes": {
+          "restrained_expressive": 50,
+          "geometric_organic": 50,
+          "familiar_experimental": 50
+        },
+        "authoritative_assets": {
+          "logo": {
+            "origin": "no_logo_slot_yet",
+            "source": "",
+            "canvas_convention": ".ds-logo",
+            "variants": {
+              "color": "",
+              "black": "",
+              "white": ""
+            },
+            "status": "unknown",
+            "evidence": "inferred"
+          },
+          "fonts": [],
+          "references": []
+        },
+        "palette": {
+          "origin": "design_tokens",
+          "colors": [],
+          "forbidden": [],
+          "status": "unknown",
+          "evidence": "inferred"
+        },
+        "typography": {
+          "origin": "ds_font_vars",
+          "display": { "family": "", "weight": "", "var": "--font-heading" },
+          "body": { "family": "", "weight": "", "var": "--font-body" },
+          "mono": { "family": "", "var": "--font-mono" },
+          "status": "unknown",
+          "evidence": "inferred"
+        },
+        "layout": {
+          "grid": "",
+          "spacing_scale": [],
+          "alignment": "",
+          "status": "unknown"
+        },
+        "shape_language": {
+          "corner_radii": [],
+          "borders": [],
+          "shadows": [],
+          "status": "unknown"
+        },
+        "graphic_devices": {
+          "motifs": [],
+          "patterns": [],
+          "rules": [],
+          "status": "unknown"
+        },
+        "composition": {
+          "hierarchy": "",
+          "logo_placement": [],
+          "text_behavior": "",
+          "status": "unknown"
+        },
+        "applications": {},
+        "unknowns": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "schema": "flowmo-style-formula/kind-templates@1",
+  "items": [
+    {
+      "id": "sprite",
+      "title": "Sprite (character or object, needs a transparent background)",
+      "when": "A single character, creature, prop, or pickup that will be placed and keyed out over other content.",
+      "template": "game sprite of <description>, single character/object, full body visible, centered,",
+      "suffix": ", on a solid uniform bright <KEY COLOR> background, no shadows cast on the background, no ground plane, nothing cropped at the edges",
+      "needs_key_color": true,
+      "aspect_ratio": "1:1"
+    },
+    {
+      "id": "tile",
+      "title": "Tile (repeating surface, pre-seamless-pipeline)",
+      "when": "A repeating ground, wall, floor, or pattern surface that will tile across an area.",
+      "template": "seamless tileable game texture tile of <description>, uniform pattern density,",
+      "suffix": ", perfectly seamless edges that wrap horizontally and vertically, no border, no vignette, flat even lighting, no single focal object",
+      "needs_key_color": false,
+      "aspect_ratio": "1:1",
+      "note": "Treat this output as raw material for flowmo-seamless-texture, not a finished tile - even a strong result here usually still needs the seam-fix pass."
+    },
+    {
+      "id": "background",
+      "title": "Background (full-frame establishing shot)",
+      "when": "A wide non-repeating backdrop behind foreground elements.",
+      "template": "game background of <description>, wide establishing view,",
+      "suffix": ", no characters, no UI elements, slightly muted detail so foreground game elements stay readable, soft depth layering",
+      "needs_key_color": false,
+      "aspect_ratio": "16:9"
+    },
+    {
+      "id": "texture",
+      "title": "Texture (flat surface material, e.g. for a 3D surface or PBR source)",
+      "when": "A flat, non-perspective material reference intended as the source for a seamless/PBR pipeline.",
+      "template": "seamless tileable surface texture of <description>,",
+      "suffix": ", perfectly seamless edges, flat even lighting, no perspective, no objects, photographed-flat appearance",
+      "needs_key_color": false,
+      "aspect_ratio": "1:1",
+      "note": "Same downstream note as tile: hand the result to flowmo-seamless-texture for the seam-fix and PBR-map pass."
+    },
+    {
+      "id": "ui",
+      "title": "UI element (button, icon, badge; needs a transparent background)",
+      "when": "A single interface element that will be placed over other UI, not a full screen.",
+      "template": "game UI element: <description>, single element, centered,",
+      "suffix": ", on a solid uniform bright <KEY COLOR> background, crisp edges, no drop shadow outside the element",
+      "needs_key_color": true,
+      "aspect_ratio": "1:1"
+    }
+  ]
+}

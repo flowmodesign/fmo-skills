@@ -1,6 +1,17 @@
 ---
 name: flowmo-interactive-design
-description: Build and attach interactive code elements (React/WebGL/canvas/Three.js/particles) in flowmo (f0), including safe text/f0-tsx handoffs for Import page. Covers live tools, scope/isolation, and keeping content selectable.
+version: 1
+family: web
+description: Build and attach interactive code elements (React/WebGL/canvas/Three.js/particles) in flowmo (f0), including safe text/f0-tsx handoffs for Import page. Covers live tools, scope/isolation, and keeping content selectable. Use when the request needs genuinely code-driven visuals — particles, WebGL, canvas, generative art, physics. NOT for stock UI patterns like tabs/accordions/carousels (the native engine covers those — see flowmo-motion-design) and NOT for ordinary HTML/CSS layout.
+surfaces: [assistant-web, flowgen-web-node, section, mcp]
+tools: [f0_invoke, create_interactive_element, attach_interactive_to_element, update_interactive_element, detach_interactive, get_canvas_state]
+writes: [code]
+triggers:
+  - interactive element
+  - webgl
+  - three.js
+  - particle system
+  - canvas visual
 ---
 
 # flowmo interactive design
@@ -18,6 +29,8 @@ on the exact final HTML before delivery.
 Use the **native engine** (via `f0_invoke`) for: mobile menus, tabs, accordions, modals, drawers, sticky headers, dropdowns, click/hover UI, carousels, reveals. See **flowmo-motion-design** for the `.f0-tabs`/`.f0-carousel`/`.f0-accordion` component presets and GSAP.
 
 Only use **`create_interactive_element`** for genuinely code-driven visuals: particle systems, WebGL/Three.js, generative art, data viz, physics, 3D.
+
+React/Motion (Framer Motion) components are not importable: translate their gestures, springs and layout animation through **flowmo-motion-design**'s Motion translation reference (`references/motion-framer-translation.md` in that package) before reaching for TSX.
 
 ## Two tools
 - **`attach_interactive_to_element`** — DEFAULT when the user already has elements they want behavior on ("make these cards a carousel", "add scripted parallax to this hero"). Promotes an EXISTING element into an interactive host; its children stay as `{children}`.

@@ -1,6 +1,15 @@
 ---
 name: flowmo-overview
-description: How to operate flowmo (f0) through the live editor and how to route editable HTML import/drop handoffs to the separate authoring contract. Use whenever inspecting, designing, editing, or preparing a page for f0.
+version: 1
+family: web
+description: How to operate flowmo (f0) through the live editor and how to route editable HTML import/drop handoffs to the separate authoring contract. Use whenever inspecting, designing, editing, or preparing a page for f0. Use when starting any f0 task, to pick the golden path and route file handoffs correctly. NOT for the craft mechanics themselves — it is the map, not the mechanics; see flowmo-frontend-design / flowmo-motion-design / flowmo-interactive-design / flowmo-3d for those.
+surfaces: [assistant-web, flowgen-web-node, section, mcp]
+tools: [f0_health, f0_design_system, f0_get_html, f0_screenshot, f0_invoke, f0_list_tools, get_element_context]
+triggers:
+  - operate f0
+  - f0 editor
+  - inspect the page
+  - golden path
 ---
 
 # Operating flowmo (f0)
@@ -25,11 +34,18 @@ authoring contract's validator on the exact final file before delivery.
 3. `f0_get_html` (a specific element id, or the active page) — read what exists before changing it.
 4. `f0_screenshot` — SEE the design when you need to (it uploads + returns an image; it never inlines base64). Screenshot once to verify, then describe — not after every micro-edit.
 5. Apply changes with `f0_invoke` — discover exact tool names + arg schemas via `f0_list_tools`.
+6. Verify once, bounded: one batched visual check with `f0_screenshot` at desktop and at mobile width, list everything wrong in both, fix it all in one batch, then at most one confirming screenshot round. Report anything still open instead of looping - open-ended screenshot-tweak-screenshot cycles burn the turn without converging.
+
+Long generation runs: `flowgen_run_node` and `flowgen_run_nodes_parallel`
+wait for the result, and for slow image or video models the tool call can time
+out while the generation still completes in the app. On a timeout, don't rerun
+(that spends credits again): read the node with `flowgen_get_node` and take the
+new entry in `generatedImages` / `generatedVideos`.
 
 ## Working style (load-bearing)
 - **Be verbal.** Narrate what you're about to do, what changed, and why — before and after each action.
 - **Ask when unclear.** A short clarifying question beats a wrong change. Never restructure a page on an assumption.
-- **Design change ≠ content change.** When asked for a design change, change ONLY styles/spacing/color/layout/visual treatment. Keep existing text, copy, labels, image subjects, and data exactly.
+- **Design change is not content change.** When asked for a design change, change ONLY styles/spacing/color/layout/visual treatment. Keep existing text, copy, labels, image subjects, and data exactly.
 - **If it's unclear whether LAYOUT (structure/arrangement) should change too — ask first.**
 
 ## A design system is ONE system with TWO targets, and motion is part of it
@@ -77,5 +93,5 @@ Every hook is a **class**: CSS rules, GSAP/animation targets, scroll triggers, s
 - **flowmo-frontend-design** — the design system, which CSS tool to use, building pages/sections.
 - **flowmo-interactive-design** — interactive code elements (React/WebGL/canvas), scope & isolation.
 - **flowmo-motion-design** — GSAP motion (`author_animation`), scroll-scrub/pin, recipes, carousels/tabs/accordions.
-- **flowmo-3d** — 3D scenes via `edit_scene` (meshes, GLB, materials/layers, particles, effectors, cameras, post-FX) + wiring 3D to the timeline.
+- **flowmo-3d** — 3D scenes via the scoped tool family (`inspect_scene`/`edit_scene`/`keyframe_scene`/`apply_motion_preset` + shader, model-gen, field-animation): meshes, GLB, materials/layers, particles, effectors, cameras/lenses/rails, post-FX + wiring 3D to the timeline.
 - **flowmo-design-craft** — general, tool-agnostic visual/motion/interaction principles.

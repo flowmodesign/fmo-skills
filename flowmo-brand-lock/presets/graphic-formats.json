@@ -1,0 +1,160 @@
+{
+  "schema": "flowmo-brand-lock/graphic-formats@1",
+  "items": [
+    {
+      "id": "feed-square",
+      "name": "Feed post, square",
+      "kind": "canvas",
+      "group": "social",
+      "width": 1080,
+      "height": 1080,
+      "aspect_ratio": "1:1",
+      "safe_zone": "Keep logo and copy inside the central ~80%; grid previews may crop square posts to 4:5 or 3:4 on some profiles, so nothing critical in the outer edge."
+    },
+    {
+      "id": "feed-portrait",
+      "name": "Feed post, portrait",
+      "kind": "canvas",
+      "group": "social",
+      "width": 1080,
+      "height": 1350,
+      "aspect_ratio": "4:5",
+      "safe_zone": "Profile grids often show only the central square or 3:4 crop; keep the headline and logo in the middle band."
+    },
+    {
+      "id": "story-reel-vertical",
+      "name": "Story / reel / short, vertical",
+      "kind": "canvas",
+      "group": "social",
+      "width": 1080,
+      "height": 1920,
+      "aspect_ratio": "9:16",
+      "safe_zone": "Leave roughly the top 250px and bottom 340px free of copy and logo (profile header, reply bar, captions, buttons overlay them); keep side margins of ~60px. Critical content in the central ~70% of the height."
+    },
+    {
+      "id": "landscape-link",
+      "name": "Landscape link / ad image",
+      "kind": "canvas",
+      "group": "social",
+      "width": 1200,
+      "height": 628,
+      "aspect_ratio": "1.91:1",
+      "safe_zone": "Previews crop toward the center and may overlay a title bar at the bottom; keep the focal point and logo in the central ~80%."
+    },
+    {
+      "id": "og-image",
+      "name": "Open Graph share image",
+      "kind": "canvas",
+      "group": "web",
+      "width": 1200,
+      "height": 630,
+      "aspect_ratio": "1.91:1",
+      "safe_zone": "Some apps crop to a square from the center; keep the title and mark in the central square-ish area and readable at thumbnail size."
+    },
+    {
+      "id": "display-medium-rectangle",
+      "name": "Display ad, medium rectangle",
+      "kind": "canvas",
+      "group": "display-ad",
+      "width": 300,
+      "height": 250,
+      "aspect_ratio": "6:5",
+      "safe_zone": "Tiny canvas: one message, logo, one CTA. Keep ~10px inner margin; no fine print."
+    },
+    {
+      "id": "display-leaderboard",
+      "name": "Display ad, leaderboard",
+      "kind": "canvas",
+      "group": "display-ad",
+      "width": 728,
+      "height": 90,
+      "aspect_ratio": "8.09:1",
+      "safe_zone": "Read left to right in one line: logo, message, CTA. Nothing stacked; type must still read at 90px tall."
+    },
+    {
+      "id": "display-wide-skyscraper",
+      "name": "Display ad, wide skyscraper",
+      "kind": "canvas",
+      "group": "display-ad",
+      "width": 160,
+      "height": 600,
+      "aspect_ratio": "4:15",
+      "safe_zone": "Stack top to bottom: logo, message, image, CTA. Narrow column, so short words and large leading."
+    },
+    {
+      "id": "display-mobile-banner",
+      "name": "Display ad, mobile banner",
+      "kind": "canvas",
+      "group": "display-ad",
+      "width": 320,
+      "height": 50,
+      "aspect_ratio": "32:5",
+      "safe_zone": "Symbol-only logo, at most five or six words, and a CTA. The full lockup will not fit at a legible size."
+    },
+    {
+      "id": "youtube-channel-banner",
+      "name": "YouTube channel banner",
+      "kind": "canvas",
+      "group": "header",
+      "width": 2560,
+      "height": 1440,
+      "aspect_ratio": "16:9",
+      "safe_area": { "width": 1546, "height": 423 },
+      "safe_zone": "Only the centered 1546x423 area shows on every device; put the logo and every word there. The rest is atmosphere that TV and desktop views reveal."
+    },
+    {
+      "id": "linkedin-company-cover",
+      "name": "LinkedIn company page cover",
+      "kind": "canvas",
+      "group": "header",
+      "width": 1128,
+      "height": 191,
+      "aspect_ratio": "5.9:1",
+      "safe_zone": "The page logo overlaps the lower-left; keep content to the right half and vertically centered."
+    },
+    {
+      "id": "linkedin-profile-banner",
+      "name": "LinkedIn personal profile banner",
+      "kind": "canvas",
+      "group": "header",
+      "width": 1584,
+      "height": 396,
+      "aspect_ratio": "4:1",
+      "safe_zone": "The profile photo covers the lower-left on desktop and the center on mobile; keep copy right of center and in the upper two thirds."
+    },
+    {
+      "id": "x-header",
+      "name": "X profile header",
+      "kind": "canvas",
+      "group": "header",
+      "width": 1500,
+      "height": 500,
+      "aspect_ratio": "3:1",
+      "safe_zone": "The avatar covers the lower-left and mobile crops the top and bottom; keep content in the central horizontal band."
+    },
+    {
+      "id": "rule-safe-zone",
+      "title": "Critical content stays in the central 70-80%",
+      "kind": "rule",
+      "rule": "Unless a canvas states its own safe area, keep the logo, headline and CTA inside the central 70-80% of both dimensions. Platform UI, rounded masks and preview crops eat the edges; the outer band is for background and atmosphere only."
+    },
+    {
+      "id": "rule-ad-text-area",
+      "title": "Ad copy stays small relative to the image",
+      "kind": "rule",
+      "rule": "In paid image ads keep text to roughly a fifth of the canvas area or less: one short headline, an optional short line, the CTA. Heavy text overlays tend to reach fewer people and read as noise; move detail to the post copy or the landing page."
+    },
+    {
+      "id": "rule-text-free-imagery",
+      "title": "Generated imagery stays text-free",
+      "kind": "rule",
+      "rule": "Generate the image layer with no words, letters, numbers or logos in it, and leave calm negative space where the copy will sit. Copy and the logo are placed afterwards as live text and the real logo element (or a controlled second pass, per mockup-contract.md), so they stay exact and editable and can be translated or resized per format."
+    },
+    {
+      "id": "rule-one-lock-many-sizes",
+      "title": "One Brand Lock across every size in a set",
+      "kind": "rule",
+      "rule": "A campaign set across several canvases repeats the same Brand Lock block verbatim; only the dimensions and layout section changes. Recompose for each ratio (re-place logo and copy) rather than cropping one master and letting the crop cut through them."
+    }
+  ]
+}

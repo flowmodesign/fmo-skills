@@ -1,0 +1,122 @@
+{
+  "schema": "flowmo-wow-catalog/tier1-catalog@1",
+  "items": [
+    {
+      "id": "a1-single-shot-hero-scrub",
+      "name": "Single-shot hero scrub",
+      "tier": "A",
+      "summary": "One short generated or sourced clip (push-in, rack focus, subject turn, light sweep; start frame differs from end frame) whose playback position is driven by scroll progress through the hero.",
+      "f0_route": "Mark the hero <video> with the data-f0-video-scrub declarative marker (see flowmo-scroll-scrub) for a file handoff, or an author_animation entry on a scroll-scrub trigger for a live-canvas build. Never hand-roll a canvas + frame-array scrubber.",
+      "mobile_degradation": "Shorten the pin distance so the scrub finishes in less scroll travel; keep the same clip, do not swap to a static image.",
+      "reduced_motion": "Show the clip's final composed frame as a static poster image; no video fetch, no pin."
+    },
+    {
+      "id": "a2-long-form-chaptered-scrub",
+      "name": "Long-form chaptered scrub",
+      "tier": "A",
+      "summary": "Two to four clips in the same grade, played across one long pinned scroll span (roughly 300-500vh), with pinned chapter text cards or readouts handing off between beats.",
+      "f0_route": "Chain multiple data-f0-video-scrub segments (or a single longer clip) across one pinned section, per flowmo-scroll-scrub; chapter copy enters on author_animation scroll-reveal timed to each segment's scroll range, on the page's own scroll-scrub pin, not a second competing ScrollTrigger.",
+      "mobile_degradation": "Trim to fewer chapters or a shorter pin per chapter; keep chapter copy in normal document flow so it still reads if the scrub itself degrades.",
+      "reduced_motion": "Render every chapter as a static stacked sequence (poster frame plus its copy), no pin, no video playback."
+    },
+    {
+      "id": "a3-product-turntable",
+      "name": "Product turntable",
+      "tier": "A",
+      "summary": "Multiple angles of the same product (or a short orbit clip) scrubbed by scroll so the user appears to rotate the product themselves.",
+      "f0_route": "data-f0-image-sequence-scrub on the frame manifest for a file handoff, or author_animation on a scroll-scrub trigger stepping through the frame set on the live canvas.",
+      "mobile_degradation": "Replace scroll-scrub with a swipeable frame sequence (touch-drag steps through the same frames) instead of relying on page scroll.",
+      "reduced_motion": "Show one representative static angle; no auto-rotation, no scroll coupling."
+    },
+    {
+      "id": "a4-seam-locked-scroll-scrub",
+      "name": "Seam-locked scroll scrub (the animated website)",
+      "tier": "A",
+      "summary": "A full-site camera journey through 4 to 7 generated or sourced scenes, each leg chained from the previous leg's actual boundary frame, with semantic chapter copy staying in normal document flow the whole time.",
+      "f0_route": "This is the core mechanism of the sibling flowmo-scroll-scrub package: chained data-f0-video-scrub segments plus author_animation scroll-scrub triggers for the live-canvas equivalent. Do not attempt this from this package alone; load flowmo-scroll-scrub first.",
+      "mobile_degradation": "Lighter encodes per leg, shorter pin distances, and a reduced scene count; the chapter copy and seam order stay identical.",
+      "reduced_motion": "The complete static story: every chapter's final frame and copy shown in document flow, no video fetch, no pin, no camera motion."
+    },
+    {
+      "id": "b1-cutout-parallax-rig",
+      "name": "Cutout parallax rig",
+      "tier": "B",
+      "summary": "A hero subject cut out from its background, restacked over 3-5 layers (background plate, mid-layer atmosphere, subject) that move at different rates on scroll and drift subtly with the cursor.",
+      "f0_route": "author_animation: one scroll-scrub tween per layer at a different range/ease for the scroll drift, plus a mouse-position trigger driving a small transform offset per layer for the cursor drift. No canvas or WebGL needed.",
+      "mobile_degradation": "Drop the cursor-driven drift entirely (no pointer on touch); keep only the scroll-parallax layers, at a reduced travel distance.",
+      "reduced_motion": "All layers render at their resting position with zero parallax offset; the composition still reads as layered through z-order and shadow alone."
+    },
+    {
+      "id": "b2-grade-shift-interaction-pair",
+      "name": "Grade-shift interaction pair",
+      "tier": "B",
+      "summary": "Two renders of the same composition (dormant vs. lit, dark vs. bright) crossfaded by a cursor-following spotlight mask or by scroll position, so the page appears to notice the visitor.",
+      "f0_route": "author_animation with a mouse-position trigger tweening a custom CSS property (for example a spotlight center position) that a mask-image or clip-path reads via var(), crossfading the two image layers; for a scroll-driven version use scroll-scrub on the same property instead of mouse-position. A bespoke create_interactive_element host is the fallback only if the mask math needs per-frame JS beyond what a CSS custom-property tween can express.",
+      "mobile_degradation": "Drive the crossfade by scroll position instead of cursor position; there is no pointer to spotlight with on touch.",
+      "reduced_motion": "Show the lit/alive render as the resting state; no crossfade, no pointer tracking."
+    },
+    {
+      "id": "b3-3d-subject-scene",
+      "name": "3D subject scene",
+      "tier": "B",
+      "summary": "An approved hero image converted to a textured 3D model and placed in a scene with scroll-driven camera orbit and cursor tilt.",
+      "f0_route": "No native tool converts an image to a 3D asset within this package's surfaces. Build the presentation as a bespoke create_interactive_element host (a Three.js-style TSX component per flowmo-interactive-design) attached to the hero section only, reading scroll progress and pointer position as animatable fields. A dedicated scene3d node is the better home for a true 3D asset pipeline but is outside this package's surfaces; note that to the user when the brief calls for real GLB-quality 3D.",
+      "mobile_degradation": "Replace the orbit drag/tilt with a fixed camera angle and a slow auto-rotate; drop the cursor tilt entirely.",
+      "reduced_motion": "Freeze the camera at its default angle with no auto-rotate and no tilt response."
+    },
+    {
+      "id": "c1-displacement-liquid-hover",
+      "name": "Displacement / liquid hover",
+      "tier": "C",
+      "summary": "A hero image rendered on a WebGL-driven surface that ripples or distorts where the cursor moves over it.",
+      "f0_route": "Check list_interactives first for a matching pre-built live background; if none fits, build a bespoke create_interactive_element host attached to the single hero element (never the page root), reading pointer position as an animatable field per flowmo-interactive-design's scope rules.",
+      "mobile_degradation": "Disable the pointer-driven distortion on touch (no persistent hover); show the plain image, optionally with a one-time subtle ripple on first tap.",
+      "reduced_motion": "Render the plain, undistorted image with no ripple response."
+    },
+    {
+      "id": "c2-particle-dissolve",
+      "name": "Particle dissolve",
+      "tier": "C",
+      "summary": "A hero image sampled into canvas particles that assemble on load and scatter or reform in response to scroll or cursor movement.",
+      "f0_route": "Check list_interactives for a matching pre-built particle background first; otherwise a bespoke create_interactive_element host, attached to the hero section, with particle count and reform speed exposed as animatable fields (never rebuilt every frame from a re-rendering component).",
+      "mobile_degradation": "Reduce particle count for performance and drive the assemble/scatter purely by scroll position, dropping cursor interaction.",
+      "reduced_motion": "Render the fully assembled image with no particle animation, as if the dissolve already completed."
+    },
+    {
+      "id": "c3-scroll-driven-mask-reveal",
+      "name": "Scroll-driven mask reveal",
+      "tier": "C",
+      "summary": "The page opens inside giant display type or a shape; scrolling expands the mask until the underlying media goes full-bleed.",
+      "f0_route": "A pure CSS/GSAP route, no canvas needed: author_animation on a scroll-scrub trigger tweening clip-path (or mask-image size) on the media element from the initial shape to full-bleed.",
+      "mobile_degradation": "Shorten the scroll distance the mask expansion is tied to so it resolves within a shorter, thumb-realistic scroll span.",
+      "reduced_motion": "Show the mask already fully expanded (the full-bleed end state) with no scroll coupling."
+    },
+    {
+      "id": "d1-horizontal-cinema-rail",
+      "name": "Horizontal cinema rail",
+      "tier": "D",
+      "summary": "A pinned section that pans horizontally through a wide panorama or a sequence of scene plates while vertical scroll continues; content cards ride the rail.",
+      "f0_route": "author_animation, a single timeline entry on the rail's track element with trigger_type scroll-scrub and trigger_config.pin true, tweening x (or scaleX-safe transform) across the pinned scroll range, per flowmo-motion-design's full-page pinned scroll story pattern.",
+      "mobile_degradation": "Shorten the pin distance and the horizontal travel so the rail resolves in a smaller scroll budget; keep the same content order.",
+      "reduced_motion": "Lay the rail's cards out as a normal vertical or horizontally-scrollable (user-driven, not scroll-position-driven) list with no pin and no automatic pan."
+    },
+    {
+      "id": "d2-sticky-stack-chapters",
+      "name": "Sticky-stack chapters",
+      "tier": "D",
+      "summary": "Full-bleed chapters that stack and peel over each other as the user scrolls, each pinned in turn with its own plate or loop and pinned type.",
+      "f0_route": "One author_animation scroll-scrub entry per chapter, each pinning its own section (trigger_config.pin true) and tweening the outgoing chapter's opacity/transform to peel away as the next one pins in; every tween stays on transform and opacity only.",
+      "mobile_degradation": "Reduce the pin distance per chapter or drop the peel transform in favor of a straightforward stacked scroll-reveal per chapter.",
+      "reduced_motion": "Stack all chapters in normal document flow with no pin and no peel transform; each renders at its resting, fully visible state."
+    },
+    {
+      "id": "d3-kinetic-type-opener",
+      "name": "Kinetic type opener",
+      "tier": "D",
+      "summary": "Massive display type choreographed on scroll: per-character stagger, a weight or width axis animation on a variable font, lines sliding on independent tracks.",
+      "f0_route": "author_animation with vars.splitText (chars or words) and a stagger object on scroll-reveal or scroll-scrub, adapting the list_motion_recipes title-scale-char-reveal / headline-word-up recipes per flowmo-motion-design; never clone one tween per character by hand.",
+      "mobile_degradation": "Fall back from a per-character stagger to a per-word or per-line stagger to keep the element count reasonable on smaller viewports.",
+      "reduced_motion": "Render the headline at full size and full opacity immediately, with no stagger and no scroll coupling."
+    }
+  ]
+}

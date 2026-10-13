@@ -1,0 +1,205 @@
+{
+  "schema": "flowmo-product-photoshoot/modes@1",
+  "groups": ["photoshoot_modes", "marketplace_assets"],
+  "note": "photoshoot_modes are picked by user intent for general brand/social/ad visuals; marketplace_assets are the 13-item listing taxonomy, each tagged with the bundle_scopes it ships in. Every prompt_skeleton is f0-authored here - fill the {slots} from the confirmed brief, there is no backend enhancer to lean on.",
+  "allowed_aspect_ratios": ["1:1", "4:5", "5:4", "3:4", "4:3", "2:3", "3:2", "9:16", "16:9"],
+  "items": [
+    {
+      "id": "product_shot",
+      "group": "photoshoot_modes",
+      "title": "Product Shot",
+      "purpose": "Product on a neutral, studio, or catalog background - the clean default listing/catalog image.",
+      "default_aspect": "1:1",
+      "prompt_skeleton": "Studio product photography of {product}, centered on a {background_color} seamless {background_type} background, soft diffused three-point lighting with a gentle reflection or shadow beneath the product, sharp focus on {key_material_or_texture_detail}, no props, no hands, commercial catalog quality, {aspect_ratio}."
+    },
+    {
+      "id": "lifestyle_scene",
+      "group": "photoshoot_modes",
+      "title": "Lifestyle Scene",
+      "purpose": "Product in a real-world environment, in use, with atmosphere - hands or action optional.",
+      "default_aspect": "4:5",
+      "prompt_skeleton": "{product} placed naturally in {environment}, {time_of_day} light, {mood} atmosphere, {optional_action_or_hands}, believable everyday styling around the product, product stays the sharp focal point, background softly out of focus, {aspect_ratio}."
+    },
+    {
+      "id": "closeup_product_with_person",
+      "group": "photoshoot_modes",
+      "title": "Closeup Product With Person",
+      "purpose": "Tight crop with hands or a partial face - application, holding, demonstrating.",
+      "default_aspect": "4:5",
+      "prompt_skeleton": "Extreme closeup of {hands_or_partial_face} {action} with {product}, skin/texture detail crisp and realistic, soft directional light, shallow depth of field isolating the product from the background, no visible face unless requested, {aspect_ratio}."
+    },
+    {
+      "id": "moodboard_pin",
+      "group": "photoshoot_modes",
+      "title": "Moodboard Pin",
+      "purpose": "Vertical Pinterest-native aesthetic image with a moodboard feel.",
+      "default_aspect": "2:3",
+      "prompt_skeleton": "{product} styled as a Pinterest-native flat-lay or scene in a {aesthetic_keyword} mood (for example cottagecore, quiet luxury, clean girl), soft natural light, curated surrounding props that support the mood without crowding the product, vertical pin composition, {aspect_ratio}."
+    },
+    {
+      "id": "hero_banner",
+      "group": "photoshoot_modes",
+      "title": "Hero Banner",
+      "purpose": "Wide-format website, email, or campaign header.",
+      "default_aspect": "16:9",
+      "prompt_skeleton": "Wide hero banner composition, {product} placed off-center on a power third with generous negative space on {left_or_right} side for headline copy, {mood} lighting matching {brand_context}, clean uncluttered background, {aspect_ratio}."
+    },
+    {
+      "id": "social_carousel",
+      "group": "photoshoot_modes",
+      "title": "Social Carousel",
+      "purpose": "3-10 connected slides for Instagram, LinkedIn, or Facebook that must share one visual system.",
+      "default_aspect": "4:5",
+      "prompt_skeleton": "Slide {n} of {total} in one connected carousel: {product} in {slide_specific_scene}, same lighting rig, palette, and background treatment as the other slides in this set, {slide_specific_focus}, {aspect_ratio}. Lock lighting, palette, and background language identically across every slide in the set before varying the scene."
+    },
+    {
+      "id": "ad_creative_pack",
+      "group": "photoshoot_modes",
+      "title": "Ad Creative Pack",
+      "purpose": "A coordinated pack of static ad variants for Meta, TikTok, Pinterest, or Google Ads.",
+      "default_aspect": "1:1",
+      "prompt_skeleton": "Ad variant {n}: {product} with {hook_or_offer} as the focal message, {mood} styling consistent with the pack, clear space reserved for headline/CTA overlay, {aspect_ratio}. Generate the square 1:1 master first, then a 4:5 and a 9:16 crop-safe recompose of the same scene for the rest of the pack."
+    },
+    {
+      "id": "virtual_model_tryout",
+      "group": "photoshoot_modes",
+      "title": "Virtual Model Tryout",
+      "purpose": "Product worn or used by an AI-rendered model - fashion, accessories, wearables.",
+      "default_aspect": "3:4",
+      "prompt_skeleton": "{model_archetype} wearing/using {product} in {environment}, {framing} framing, editorial-quality lighting, natural pose, product fit and details crisp and accurate, {aspect_ratio}."
+    },
+    {
+      "id": "conceptual_product",
+      "group": "photoshoot_modes",
+      "title": "Conceptual Product",
+      "purpose": "Surreal, CGI-style, levitating, splash, or sculptural treatment of the product.",
+      "default_aspect": "1:1",
+      "prompt_skeleton": "{product} rendered as a surreal CGI-style composition: {concept_keyword} (for example levitating, splash-frozen, sculptural), dramatic studio lighting, glossy premium render quality, product geometry and branding kept accurate even as the scene turns surreal, {aspect_ratio}."
+    },
+    {
+      "id": "restyle",
+      "group": "photoshoot_modes",
+      "title": "Restyle",
+      "purpose": "Transform an existing image's aesthetic, mood, or seasonal context without changing the subject.",
+      "default_aspect": "match_source",
+      "prompt_skeleton": "Restyle the attached image to a {target_aesthetic} aesthetic{optional_seasonal_context}: keep the product, its pose, and its proportions EXACTLY unchanged; change only lighting, palette, background, and surrounding styling to match the new mood. Preserve the source image's aspect ratio."
+    },
+    {
+      "id": "main_image",
+      "group": "marketplace_assets",
+      "title": "Main Image",
+      "purpose": "The primary listing thumbnail - compliant, clean, product-only.",
+      "default_aspect": "1:1",
+      "bundle_scopes": ["main", "product-images", "aplus", "full-set"],
+      "prompt_skeleton": "Marketplace main image: {product} centered on a pure white seamless background, fills 85% of the frame, no props, no text, no watermark, no lifestyle elements, sharp commercial product photography, {aspect_ratio}."
+    },
+    {
+      "id": "infographic",
+      "group": "marketplace_assets",
+      "title": "Infographic",
+      "purpose": "Secondary image explaining key specs, benefits, or a comparison at a glance.",
+      "default_aspect": "1:1",
+      "bundle_scopes": ["product-images", "full-set"],
+      "prompt_skeleton": "Marketplace infographic panel: {product} shown with 3-4 short truthful callouts for {key_specs_or_benefits}, clean brand-consistent iconography, generous white space, legible at thumbnail size, {aspect_ratio}."
+    },
+    {
+      "id": "multi_angle",
+      "group": "marketplace_assets",
+      "title": "Multi Angle",
+      "purpose": "The same product from a second meaningful angle (side, back, open, detail).",
+      "default_aspect": "1:1",
+      "bundle_scopes": ["product-images", "full-set"],
+      "prompt_skeleton": "Marketplace secondary image: {product} from a {angle} angle, same neutral studio lighting and background treatment as the main image, sharp focus, {aspect_ratio}."
+    },
+    {
+      "id": "detail_shot",
+      "group": "marketplace_assets",
+      "title": "Detail Shot",
+      "purpose": "A tight closeup on a material, texture, or feature the listing needs to prove.",
+      "default_aspect": "1:1",
+      "bundle_scopes": ["product-images", "full-set"],
+      "prompt_skeleton": "Marketplace detail image: extreme closeup on {feature_or_material} of {product}, macro-level sharpness, neutral even lighting, no distracting background, {aspect_ratio}."
+    },
+    {
+      "id": "lifestyle",
+      "group": "marketplace_assets",
+      "title": "Lifestyle",
+      "purpose": "The product in context so the buyer can picture using it.",
+      "default_aspect": "1:1",
+      "bundle_scopes": ["product-images", "full-set"],
+      "prompt_skeleton": "Marketplace lifestyle image: {product} in {realistic_use_context}, natural light, product remains the sharp focal point, background supportive and uncluttered, {aspect_ratio}."
+    },
+    {
+      "id": "whats_in_box",
+      "group": "marketplace_assets",
+      "title": "What's In The Box",
+      "purpose": "Flat-lay of every included item so the buyer knows exactly what ships.",
+      "default_aspect": "1:1",
+      "bundle_scopes": ["product-images", "full-set"],
+      "prompt_skeleton": "Marketplace what's-in-the-box flat-lay: {product} plus {included_items_list} laid out neatly on a neutral surface, even top-down lighting, every item clearly separated and identifiable, {aspect_ratio}."
+    },
+    {
+      "id": "aplus_hero_banner",
+      "group": "marketplace_assets",
+      "title": "A+ Hero Banner",
+      "purpose": "The wide opening module of the A+ content module stack.",
+      "default_aspect": "16:9",
+      "bundle_scopes": ["aplus", "full-set"],
+      "prompt_skeleton": "A+ content hero banner: {product} in an aspirational brand scene, wide composition with clear space on one side for a headline, {brand_context} palette and lighting, {aspect_ratio}."
+    },
+    {
+      "id": "aplus_pain_points",
+      "group": "marketplace_assets",
+      "title": "A+ Pain Points",
+      "purpose": "Module naming the problem the product solves, before showing the product as the answer.",
+      "default_aspect": "4:3",
+      "bundle_scopes": ["aplus", "full-set"],
+      "prompt_skeleton": "A+ content pain-point module: a relatable, truthful depiction of {problem_the_product_solves}, empathetic and realistic tone, room for a short truthful caption, {aspect_ratio}."
+    },
+    {
+      "id": "aplus_features",
+      "group": "marketplace_assets",
+      "title": "A+ Features",
+      "purpose": "Module breaking out 2-4 key features with room for labels.",
+      "default_aspect": "4:3",
+      "bundle_scopes": ["aplus", "full-set"],
+      "prompt_skeleton": "A+ content features module: {product} with 2-4 key features visually called out (arrows or clear framing), clean brand-consistent styling, generous white space for labels, {aspect_ratio}."
+    },
+    {
+      "id": "aplus_ingredients",
+      "group": "marketplace_assets",
+      "title": "A+ Ingredients",
+      "purpose": "Module showcasing formula, materials, or components.",
+      "default_aspect": "1:1",
+      "bundle_scopes": ["aplus", "full-set"],
+      "prompt_skeleton": "A+ content ingredients/materials module: {key_ingredients_or_materials} arranged around or beside {product}, natural textures true to life, soft even light, {aspect_ratio}."
+    },
+    {
+      "id": "aplus_efficacy",
+      "group": "marketplace_assets",
+      "title": "A+ Efficacy",
+      "purpose": "Module showing the product's result or before/after proof point, kept truthful.",
+      "default_aspect": "4:3",
+      "bundle_scopes": ["aplus", "full-set"],
+      "prompt_skeleton": "A+ content efficacy module: a truthful, non-exaggerated depiction of {product}'s real result or proof point, clean comparison or demonstration framing, {aspect_ratio}."
+    },
+    {
+      "id": "aplus_how_to_use",
+      "group": "marketplace_assets",
+      "title": "A+ How To Use",
+      "purpose": "Module walking through application or usage steps.",
+      "default_aspect": "4:3",
+      "bundle_scopes": ["aplus", "full-set"],
+      "prompt_skeleton": "A+ content how-to-use module: {step_description} with {product} in hand or in use, clear instructional framing, numbered-step-friendly composition, {aspect_ratio}."
+    },
+    {
+      "id": "aplus_endorsement",
+      "group": "marketplace_assets",
+      "title": "A+ Endorsement",
+      "purpose": "Module carrying a review quote, rating, or trust signal alongside the product.",
+      "default_aspect": "4:5",
+      "bundle_scopes": ["aplus", "full-set"],
+      "prompt_skeleton": "A+ content endorsement module: {product} shown alongside a generic, truthful trust signal (for example a star rating or short quote treated as overlay text, never a fabricated named review), clean brand-consistent layout, {aspect_ratio}."
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "schema": "flowmo-design-recipe/banned-palettes@1",
+  "items": [
+    {
+      "id": "graphite-ember",
+      "title": "Graphite + ember/amber accent",
+      "hexes": ["#0a0a0a", "#ff5c1a", "#ff6b35", "#e8590c", "#f97316", "#ea580c", "#d9480f"],
+      "why_banned": "The single most common AI reach for a bold/technical brief: near-black ground plus an orange-amber-ember accent. Overridable only when the user's own brand colors land here on purpose."
+    },
+    {
+      "id": "near-black-neon",
+      "title": "Near-black + neon cyan/blue/green glow",
+      "hexes": ["#00e5ff", "#22d3ee", "#00ff88", "#4ade80", "#3b82f6"],
+      "why_banned": "Generic tech/AI glow-on-dark look. Reads as a stock SaaS-AI template rather than a considered brand choice."
+    },
+    {
+      "id": "beige-brass-espresso",
+      "title": "Beige-cream + brass/clay/oxblood + espresso",
+      "hexes": ["#f5f1ea", "#f7f5f1", "#fbf8f1", "#efeae0", "#ece6db", "#faf7f1", "#e8dfcb", "#b08947", "#b6553a", "#9a2436", "#9c6e2a", "#bc7c3a", "#7d5621", "#1a1714", "#1a1814", "#1b1814"],
+      "why_banned": "Over-picked default reach for cookware, wellness, artisan, luxury, and DTC briefs. Allowed only when the brief literally names these colors. Rotate instead: cold-luxury (silver/chrome/smoke), forest (deep green + bone + amber), black and tan, cobalt + cream, terracotta + slate, olive + brick + paper, or monochrome plus one saturated pop. Derive the actual palette from the brief's material world first; treat the rotation list as an escape hatch, not a menu to default into."
+    },
+    {
+      "id": "ai-purple-violet",
+      "title": "AI purple/violet glow gradient",
+      "hexes": ["#8b5cf6", "#a855f7", "#7c3aed"],
+      "why_banned": "The purple-gradient cliche that reads as generated-by-AI on sight, in any pairing (hero mesh, button glow, badge background)."
+    },
+    {
+      "id": "editorial-broadsheet",
+      "title": "Editorial broadsheet look: hairline rules + italic display serif + small tracked mono labels",
+      "hexes": [],
+      "why_banned": "A treatment, not a hex list: off-white newsprint ground, thin horizontal rules between every block, an italic serif display headline, and tiny uppercase letter-spaced mono kickers and captions. It has become the default AI reach for any brief described as thoughtful, premium or editorial, so it reads as generated rather than authored. Allowed only when the brand really is a publication or the brief names this look; otherwise keep at most one of the three ingredients and derive the rest from the brand's own world. Detect it by eye and in CSS: 1px top/bottom borders on most sections, font-style italic on the display face, and letter-spacing above about 0.1em on mono labels."
+    },
+    {
+      "id": "previous-build-repeat",
+      "title": "The same palette family as the previous build in this session",
+      "hexes": [],
+      "why_banned": "Contextual, not a fixed hex list: consecutive pages built in the same conversation must not share a palette family, even if that family is not itself banned. Check what accent/neutral pairing the last page used and pick a different family this time."
+    }
+  ]
+}

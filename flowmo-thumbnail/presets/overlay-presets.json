@@ -1,0 +1,65 @@
+{
+  "schema": "flowmo-thumbnail/overlay-presets@1",
+  "traits": [
+    { "trait": "font", "rule": "One heavy display face, one weight only. Anton (or an Anton-class condensed grotesk) is the default; see aliases per preset." },
+    { "trait": "case", "rule": "ALL CAPS. Maximum density and aggression, never sentence case." },
+    { "trait": "stroke", "rule": "A manual stroke, thick, drawn UNDER the fill via paint-order: stroke fill (or strokeText-before-fillText on canvas). Sized as a percentage of cap height, not a fixed px." },
+    { "trait": "shadow", "rule": "A hard, dark, offset-down shadow for sticker-style depth, not a soft ambient glow." },
+    { "trait": "color", "rule": "One punchy color per headline: white, a warm gradient, or an acid accent. Never mix more than one treatment in the same headline." },
+    { "trait": "tracking", "rule": "Tight letter-spacing (around -0.01em to -0.02em) and a line-height near 0.9 so lines lock together like a logotype." }
+  ],
+  "placement_rule": "2 to 4 words max, never a full sentence. Never over the subject's face - place in a free quarter (bottom, corner, or side). Cap height 12-18% of the frame height; when in doubt, go bigger. Keep comfortable padding inside the frame, off the extreme edges.",
+  "implementation_note": "Author these as a set_stylesheet rule targeting the headline class (for example .thumb-headline), never as inline per-element styles - repeating the class keeps every headline in the project on one edit point.",
+  "items": [
+    {
+      "id": "beast",
+      "title": "Beast - white with a thick black stroke",
+      "aliases": ["MrBeast stack", "default"],
+      "font_family": "Anton, sans-serif",
+      "font_weight": 900,
+      "stroke_pct_of_cap_height": 11,
+      "css": ".thumb-headline { font-family: 'Anton', sans-serif; font-weight: 900; text-transform: uppercase; letter-spacing: -0.01em; line-height: 0.9; color: #ffffff; -webkit-text-stroke: 0.11em #000000; paint-order: stroke fill; text-shadow: 0 8px 0 rgba(0,0,0,0.35), 0 14px 24px rgba(0,0,0,0.55); }",
+      "placement": "Bottom-center or a free bottom corner, never crossing the subject's face; keep 6-8% frame padding from the bottom edge."
+    },
+    {
+      "id": "fire",
+      "title": "Fire - yellow to orange to red gradient",
+      "aliases": [],
+      "font_family": "Anton, sans-serif",
+      "font_weight": 900,
+      "stroke_pct_of_cap_height": 11,
+      "css": ".thumb-headline { font-family: 'Anton', sans-serif; font-weight: 900; text-transform: uppercase; letter-spacing: -0.01em; line-height: 0.9; -webkit-text-stroke: 0.11em #1a0a00; paint-order: stroke fill; background: linear-gradient(180deg, #FFE24B 0%, #FF9A1F 45%, #FF2E2E 100%); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 0 22px rgba(255,120,0,0.55)) drop-shadow(0 10px 0 rgba(0,0,0,0.4)); }",
+      "placement": "Bottom-center or a free side panel; the warm gradient reads best against a darker background area of the image."
+    },
+    {
+      "id": "neon-lime",
+      "title": "Neon Lime - acid lime with a glow",
+      "aliases": [],
+      "font_family": "Anton, sans-serif",
+      "font_weight": 900,
+      "stroke_pct_of_cap_height": 10,
+      "css": ".thumb-headline { font-family: 'Anton', sans-serif; font-weight: 900; text-transform: uppercase; letter-spacing: -0.01em; line-height: 0.9; color: #D4FF3F; -webkit-text-stroke: 0.10em #0a1400; paint-order: stroke fill; text-shadow: 0 0 26px rgba(180,255,40,0.7), 0 10px 0 rgba(0,0,0,0.4); }",
+      "placement": "Any free quarter with a mid-to-dark background behind it so the glow reads; avoid placing over light or busy areas."
+    },
+    {
+      "id": "clean-glass",
+      "title": "Clean Glass - frosted pill, no stroke",
+      "aliases": [],
+      "font_family": "Inter, sans-serif",
+      "font_weight": 800,
+      "stroke_pct_of_cap_height": 0,
+      "css": ".thumb-headline { font-family: 'Inter', sans-serif; font-weight: 800; color: #ffffff; letter-spacing: -0.02em; background: rgba(20,20,25,0.45); backdrop-filter: blur(16px); padding: 0.12em 0.5em; border-radius: 0.2em; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }",
+      "placement": "Bottom-third as a pill-shaped band; works best on busy or bright backgrounds where a stroke-only treatment would lose legibility."
+    },
+    {
+      "id": "marker",
+      "title": "Marker - black Anton on lime line-boxes",
+      "aliases": [],
+      "font_family": "Anton, sans-serif",
+      "font_weight": 900,
+      "stroke_pct_of_cap_height": 0,
+      "css": ".thumb-headline { font-family: 'Anton', sans-serif; font-weight: 900; text-transform: uppercase; letter-spacing: -0.01em; line-height: 0.9; color: #0a0a0a; background: #D4FF3F; box-decoration-break: clone; -webkit-box-decoration-break: clone; padding: 0 0.18em; box-shadow: 0 8px 0 rgba(0,0,0,0.5); }",
+      "placement": "Stacked short lines in a free corner, each line its own highlighted box; reads like a marker-highlighted note over the scene."
+    }
+  ]
+}

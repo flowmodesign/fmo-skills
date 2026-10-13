@@ -1,45 +1,36 @@
 ---
 name: flowmo-design-craft
-description: General, tool-agnostic craft principles for building distinctive, production-grade interfaces and motion — visual hierarchy, type, color, spacing, layout, polish, animation choreography, and interaction affordances. Use alongside the flowmo-* skills to raise design quality and avoid generic "AI-looking" output. Applies whenever you design or critique a UI.
+version: 1
+family: web
+description: General, tool-agnostic craft principles for building distinctive, production-grade interfaces and motion — visual hierarchy, type, color, spacing, layout, polish, animation choreography, and interaction affordances. Use alongside the flowmo-* skills to raise design quality and avoid generic "AI-looking" output. Applies whenever you design or critique a UI. Use when a build or review needs a taste pass, not just correctness. NOT for f0-specific tool syntax or mechanics — those live in the other flowmo-* skills.
+surfaces: [assistant-web, assistant-video, designer, flowgen-web-node, mcp]
+triggers:
+  - design critique
+  - looks generic
+  - raise the design quality
+  - AI-looking
+derived_from: https://github.com/pbakaus/impeccable
 ---
 
 # Design craft (general)
 
-Principles that make an interface read as *designed*, not generated. Pair these with the flowmo-specific skills (which tell you HOW to express them in f0).
+Design deliberately; use flowmo-specific skills for f0 syntax. More: references/surface-and-polish.md, references/refinement-verbs.md.
 
-## Avoid the generic-AI look
-The default failure mode is bland: centered everything, even gray cards, one weight of type, equal spacing, a stocky gradient hero, emoji bullets. Beat it with intent:
-- **Pick a point of view.** A real visual idea (editorial, brutalist, soft-glass, retro-terminal, premium-dark) beats "clean and modern" with no opinion.
-- **Contrast is the engine of hierarchy.** Vary size, weight, color, and spacing decisively — not by 1.1×. One dominant element per section.
-- **Asymmetry and rhythm** over wall-to-wall centering. Let some sections breathe and others compress.
+## Direction and hierarchy
+- Choose a visual point of view from the brief; "clean and modern" alone is not a direction. Give each section one dominant element with decisive scale, weight, color, and spacing contrast. Use asymmetry and varied rhythm when useful; honor requested or brand-led centered layouts and familiar treatments.
+- Use a readable display-to-caption scale, at most two type families, tight heading and relaxed body leading, and a 60-75-character body measure. Differentiate with weight and tracking as well as size.
+- Anchor color in one or two accents, a neutral ramp, and clear text/muted/inverse roles. Use accents sparingly; meet WCAG AA contrast (about 4.5:1 body, 3:1 large). Lift and slightly desaturate dark surfaces rather than defaulting to pure black and white.
+- Reuse a spacing scale and grid; group related content, separate unrelated content, constrain line length, and vary section padding for cadence. Use soft, directional, layered shadows and consistent radii. Polish states, empty states, icon alignment, optical centering, and stroke widths.
 
-## Type
-- A clear scale (display → h1 → h2 → body → caption) with real jumps between steps. Tight leading on headings, relaxed on body.
-- Two families max (or one with weights). Set measure ~60–75 chars for body. Use weight and tracking, not just size, to differentiate.
+## Motion and interaction
+- Motion should guide attention, show relationships, or reward action. Use ease-out entrances, ease-in exits; reserve linear easing for continuous/scrubbed motion. Typical UI timing is 150-300ms, entrances 400-800ms, ambient loops slow. Prefer a few choreographed beats over motion everywhere; respect reduced motion.
+- Make controls recognizable with cursor, hover, and focus feedback; target at least 40px. Show state changes immediately. Disclose essentials first and details on intent.
 
-## Color
-- Anchor on a small palette: one or two accents, a neutral ramp, clear text/muted/inverse. Use accent sparingly — it loses power if everywhere.
-- Ensure text contrast (WCAG AA: ~4.5:1 body, 3:1 large). Dark themes need slightly desaturated, lifted surfaces — pure `#000` + pure white is harsh.
+## Finish and critique
+- Before shipping, check for a strong hero with real visual content, clear hierarchy, intentional color, consistent spacing, considered states, and purposeful motion; redesign flat or default sections.
+- Never infer authorship or a defect from patterns. Familiar gradients, centered layouts, repeated phrases, and polished cadence invite inspection but prove nothing. Preserve deliberate brand treatments, requested maximalism, expressive glow, centered editorial layouts, and approved copy. Flag a pattern only when the brief, brand reference, copy approval, or interaction goal shows a concrete miss.
+- Ground each finding in the inspected page/layer and stable element id or selector. Quote exact visible copy, cite evidence and the missed goal/rule, and propose the smallest repair. Scope exceptions to their exact user-approved source and element.
+- In visual-only work preserve approved words verbatim. In copy review, identify a specific clarity, truth, repetition, or voice issue before the smallest edit; preserve humor, dialect, uncertainty, slogans, legal language, and distinctive rhythm.
+- Review the actual revision; after a repair, inspect and review the new one before closing. Stale screenshots, layer snapshots, and page reports cannot verify later edits.
 
-## Spacing & layout
-- One spacing scale, used consistently. Group related things tighter; separate unrelated things with generous whitespace.
-- Align to a grid; let content max-width keep lines readable. Padding inside containers should feel intentional and even.
-- Section rhythm: vary vertical padding so the page has cadence, not a uniform drumbeat.
-
-## Depth & polish
-- Shadows model real light: soft, directional, layered — not a hard 4px drop everywhere. Border-radius consistent within a family.
-- Details sell it: hover/focus states, considered empty states, aligned icons, optical centering, consistent stroke widths.
-
-## Motion choreography
-- Motion has a job: guide the eye, show relationships, reward action. Decorative-only motion that fights reading is worse than none.
-- **Easing:** ease-out for entrances (fast→settle), ease-in for exits. Avoid linear except for continuous/scrubbed motion.
-- **Duration:** UI 150–300ms; entrances 400–800ms; ambient loops slow. Stagger by a small `amount`, not a long per-item delay.
-- **Choreograph, don't carpet-bomb:** a few well-timed moves (hero reveal, one scroll beat, a stagger) beat everything-animates. Respect reduced-motion.
-
-## Interaction & affordance
-- Make interactive things look interactive (cursor, hover feedback, focus ring). Keep targets ≥ ~40px.
-- Feedback is immediate; state is obvious (active tab, current slide, open accordion). Never leave the user guessing whether something worked.
-- Progressive disclosure: show the essential, reveal detail on intent. Don't dump every option at once.
-
-## Quality bar before you ship
-Would a senior designer call this *finished*? Check: a strong hero with a real visual element, a clear type hierarchy, intentional color, consistent spacing, considered states, and motion with a purpose. If a section feels flat or default, redesign it — don't ship it.
+Reference provenance: informed by [yetone/kill-ai-slop](https://github.com/yetone/kill-ai-slop) (Apache-2.0) and [petergyang/no-ai-slop](https://github.com/petergyang/no-ai-slop) (MIT). This skill uses original f0-specific wording and does not infer AI authorship.

@@ -1,6 +1,17 @@
 ---
 name: flowmo-frontend-design
-description: Design and edit pages/sections in flowmo (f0) on its design-system foundation. Use for live HTML/CSS editing and, together with flowmo-authoring-contract, for HTML files intended for f0 Import page or drag-and-drop.
+version: 1
+family: web
+description: Design and edit pages/sections in flowmo (f0) on its design-system foundation. Use for live HTML/CSS editing and, together with flowmo-authoring-contract, for HTML files intended for f0 Import page or drag-and-drop. Use when the task is page/section layout, CSS, or the ds-* design system on the live canvas. NOT for motion/interactions (flowmo-motion-design), code-driven visuals (flowmo-interactive-design), or 3D scenes (flowmo-3d).
+surfaces: [assistant-web, flowgen-web-node, section, mcp]
+tools: [f0_design_system, build, update_stylesheet, apply_class_styles, apply_styles, validate_canvas]
+writes: [structure, content, style]
+triggers:
+  - design system
+  - build a page
+  - hero section
+  - ds-button
+  - ds-grid
 ---
 
 # flowmo frontend design
@@ -39,7 +50,7 @@ You **may** add NEW custom classes and NEW `:root` `--vars` — but only as ADDI
 - Express a whole design as inline hardcoded styles to work around a tool. That breaks the design system.
 
 ## Which CSS tool writes what (the #1 source of wasted attempts)
-- **New section/page → `create_content` / `build`.** Put `ds-*` classes on each element IN THE HTML. For descendant / `:hover` / `:nth-child` / `@media` rules, include a `<style>` block INSIDE the HTML — full CSS selectors work there and are guaranteed to match because the classes are on the elements. **This is the most reliable path for complex CSS.**
+- **New section/page → `build`.** Put `ds-*` classes on each element IN THE HTML. For descendant / `:hover` / `:nth-child` / `@media` rules, include a `<style>` block INSIDE the HTML — full CSS selectors work there and are guaranteed to match because the classes are on the elements. **This is the most reliable path for complex CSS.**
 - **Complex selectors on EXISTING elements → `update_stylesheet`.** It supports descendant/pseudo/`:nth-child`/`@media` and creates rules. But the selectors MUST match elements already on the canvas. A "0 rules applied / no selectors match" result means the class isn't on any element yet — add the class (below), don't give up and inline.
 - **One simple shared class → `apply_class_styles`** (`class_name` + `css` + `element_ids`). Single class only — it cannot express descendant/pseudo/`:nth-child`.
 - **One element, one-off properties → `apply_styles`** (inline, element-scoped, no selectors).
@@ -53,3 +64,8 @@ You **may** add NEW custom classes and NEW `:root` `--vars` — but only as ADDI
 
 ## Hero elevation (mandatory on a page build)
 A flat hero — text + button on a plain/gradient background, no image/video/interactive/decorative layer — is the single biggest failure mode. Every hero ships with at least one strong visual element (image, video, an interactive/3D layer, or decorative orbs/gradient mesh). For the interactive-layer route, see **flowmo-interactive-design**.
+
+## States
+Every interactive element (`ds-button`, links, `ds-input`, cards that act as links, tabs) needs its states designed, not left to the browser. When two apply at once, the higher one wins: **disabled > loading > active/pressed > focus > hover > default**. A disabled button never shows hover; a loading button keeps its size and blocks a second press.
+
+Focus ring recipe: on `:focus-visible` (keyboard focus, not mouse clicks), a 2px ring in `var(--color-ring)` sitting 2px off the element, the gap showing the background - `outline: 2px solid var(--color-ring); outline-offset: 2px;`, or, where an outline would be clipped, `box-shadow: 0 0 0 2px var(--color-background), 0 0 0 4px var(--color-ring);`. Inside a `ds-section-dark` band the tokens are rebound, so the same rule still contrasts. `ds-button` already ships a `--color-ring` focus outline; match it on custom interactive classes. Never write `outline: none` on focus without putting an equally visible replacement in the same rule.
