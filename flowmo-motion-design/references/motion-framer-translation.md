@@ -3,11 +3,12 @@
 Part of the flowmo-motion-design skill package - see the package's SKILL.md for
 routing.
 
-f0 cannot import React, so it cannot import Motion (formerly Framer Motion)
-components either. A `motion.div` with `initial` / `animate` / `whileInView`
-props, a `<AnimatePresence>`, or a `useScroll` hook arrives as nothing: there is
-no runtime for it. Authors and agents still arrive thinking in that vocabulary,
-so this page maps each Motion idea to the f0 carrier that says the same thing.
+Use this reference when Motion (formerly Framer Motion) behavior should become
+native editable interactions. Browser-compatible Motion packages can instead
+run inside a scoped TSX interactive element using the ESM contract in
+**flowmo-interactive-design**. Raw React source in an ordinary HTML script does
+not become native motion; use `text/f0-tsx` for that coded experience. Its
+controls stay editable, but JSX does not become individual native layers.
 
 Pick ONE carrier per effect (the authoring contract's rule):
 
@@ -22,7 +23,8 @@ Pick ONE carrier per effect (the authoring contract's rule):
 - **[CSS]** plain CSS: transitions, `:hover` / `:active` / `:focus-visible`
   states, and `@keyframes` kept inside a
   `@media (prefers-reduced-motion: no-preference)` block.
-- **GAP** - f0 has no equivalent today. Say so; do not fake it with a script.
+- **GAP** - no native equivalent in this translation. If required by the brief,
+  use a scoped code element and describe its editability accurately.
 
 The full handoff grammar, the payload shape and the validator live in
 **flowmo-authoring-contract** (`references/motion-handoff.md`). This page only
@@ -73,8 +75,8 @@ common spring feels with plain GSAP eases, which every carrier can use:
 | `ease: "easeInOut"` (tween) | `power2.inOut` | SMOOTH | |
 | `ease: [x1, y1, x2, y2]` | `cubicBezier(x1,y1,x2,y2)` | - | native playback ease |
 
-**An exact spring** (when the stiffness/damping numbers matter) goes ONLY in a
-native interaction's `playback.ease`. The runtime parses two forms and turns
+For this native translation, **an exact spring** (when the stiffness/damping
+numbers matter) goes in an interaction's `playback.ease`. The runtime parses two forms and turns
 them into a custom ease:
 
 - positional physics: `spring(mass, stiffness, damping, velocity)`, all four

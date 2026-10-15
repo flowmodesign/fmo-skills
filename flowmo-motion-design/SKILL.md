@@ -69,7 +69,7 @@ Put `scrollTrigger:{ start, end, scrub, pin }` directly inside a tween's `vars` 
 - **Reveals (repeating items):** `.f0-reveal` on each child (for a staggered `author_animation`, not a component preset).
 
 ## Translating from Motion / Framer (React)
-f0 cannot import React, so Motion components never arrive. Map `initial`/`whileInView`, variants and stagger, springs, gestures, `layoutId`, `AnimatePresence`, `useScroll` and reduced motion to a GSAP, native or CSS carrier (gaps marked) with
+For native editable motion, map `initial`/`whileInView`, variants and stagger, springs, gestures, `layoutId`, `AnimatePresence`, `useScroll` and reduced motion to a GSAP, native or CSS carrier (gaps marked) with
 [references/motion-framer-translation.md](references/motion-framer-translation.md).
 
 ## Importing existing GSAP / HTML (mandatory separate contract)

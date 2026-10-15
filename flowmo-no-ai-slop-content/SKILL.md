@@ -1,7 +1,7 @@
 ---
 name: flowmo-no-ai-slop-content
 title: Remove AI slop from content
-version: 2
+version: 3
 family: other
 derived_from: https://github.com/petergyang/no-ai-slop/blob/000650b156983f5159695b441477f4e63b25dc85/skills/no-ai-slop/SKILL.md
 task_family: quality
@@ -14,6 +14,10 @@ triggers: [no AI slop, remove AI slop, content review, sounds generic, sharpen t
 ---
 
 # Content quality review and repair
+
+For website work, use the shared `evaluate_website_quality` gate (`f0_evaluate_website_quality` over MCP): automatically repair only a located, current major/critical defect with confidence at least 0.85 and a concrete missed requirement. Report minor polish without automatic edits; preserve approved wording. Missing evidence is unverified. Carry the gate's `repairKeys` into the next review so an unchanged finding cannot trigger another repair merely because unrelated source changed. Re-read the changed saved revision before passing. This threshold grants no write or spending authority.
+
+**Scope before review:** JEV stage/context selection and independent reviewers apply this method to the current requested domain. New generated work receives a quality pass. For a scoped edit, inspect only the changed region and affected states; preserve unrelated work. Exact wording, specifically requested styling, approved brand treatments and faithful reference recreation are protected aspects, not automatic slop findings. A copy-only edit cannot authorize redesign; a visual-only edit cannot authorize copy changes. Explicit anti-slop requests authorize the corresponding scoped repair. These exceptions do not waive factuality, functional correctness, editability or verification of requested output.
 
 Review actual saved visible text and scripts after creation/editing, separately from design. Establish audience, purpose, brand voice, factual sources and approved wording from existing context. Classify located findings as clarity, specificity, repetition, unsupported claim, voice drift, rhetorical filler or format/timing mismatch. Quote the exact text and its page/layer/element ID and revision, explain the missed goal, propose the minimum effective edit, then re-read the saved revision after an authorized repair.
 

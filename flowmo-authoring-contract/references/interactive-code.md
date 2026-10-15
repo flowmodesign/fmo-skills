@@ -38,11 +38,12 @@ Keep it well-behaved, because it runs on the user's real page:
 
 ## Keep the words editable
 
-Any user-visible copy that could reasonably be edited belongs in real HTML
-elements, not generated from inside a script. Text painted into a canvas or built
-by JS is invisible to the editor, to search and to the CMS. The script should be
-the BEHAVIOUR; the content stays the user's, as real elements they can select and
-retype.
+Keep ordinary page copy and media in real HTML elements so they remain
+individually selectable and CMS-bindable. A bespoke coded widget may render
+JSX and expose its copy/settings through `f0Fields`. Those controls edit the
+component; they do not turn JSX or canvas text into native editable layers.
+Preserve native content as `{children}` when adding behavior to an existing
+element.
 
 ## Sidebar-controlled props
 
@@ -116,6 +117,16 @@ its `f0Fields` already exposed as sidebar controls:
 - The fields are read from the source on import, so the controls are there
   immediately. Source that does not compile still imports - you get the element
   and the error in the code editor rather than a silent no-show.
+- In a ZIP, the same block can use `src="components/visual.tsx"` to include
+  its component file. The importer reads it as editable source. Bundle any
+  local module graph first, or map imports to hosted browser ESM modules.
+- f0's sidebar and FlowGen's selected-element **Edit code and controls**
+  popover expose the same controls. Source edits preserve values by field name;
+  field and source changes use the owning document's undo history.
+- FlowGen Code Component output uses this same native payload. Keep the
+  component's import statements, `f0Imports`, `f0Cdns` and literal `f0Fields`
+  intact through placement and source updates; stripping imports breaks the
+  dependencies that editor, preview and export need.
 
 ## Placing and sizing a code element on the page
 
@@ -182,8 +193,32 @@ These globals are available to code running inside flowmo, and load automaticall
 when referenced: `THREE`, `gsap`, `d3`, `p5`, `Tone`, `Matter`, `PIXI`, `Konva`,
 `Lenis`, `CANNON`, `Howl`, `Chart`, `mapboxgl`, `L`, `Zdog`, `anime`, `Rive`,
 `lottie`, `marked`, `DOMPurify`, `QRCode`, `Swiper`, `SplitType`, `Splitting`.
-Reference the GLOBAL (`new THREE.Scene()`) - do not import it. If what you need is
-not on that list, say so: a hand-written CDN tag will not load.
+Reference the GLOBAL (`new THREE.Scene()`) for these classic libraries. Other
+browser-compatible packages can use npm or HTTPS ESM imports:
+
+```tsx
+import { color } from 'd3-color@3.1.0';
+import { Widget } from 'visual-kit';
+export const f0Imports = {
+  'visual-kit': 'https://esm.sh/visual-kit@1?external=react,react-dom',
+};
+export const f0Fields = [{name:'accent', type:'color', default:'#e57b32'}];
+export default function Visual({accent}) { return <Widget color={color(accent).formatHex()}/>; }
+```
+
+The `text/f0-tsx` source, literal controls, saved values and dependency mappings
+travel together through MCP/import, editor, preview and export. Controls appear
+in the same native sidebar as an element made inside f0. Keep field names stable
+to preserve edited values. Literal `f0Fields` metadata is read before loading
+packages; computed metadata with external imports must be changed to literals.
+Npm imports use esm.sh unless `f0Imports` pins another HTTPS ESM URL. React-based
+CDN packages must externalize React peers (as above); f0 supplies its own React
+instance. Use browser packages, not Node-only libraries or raw JSX source.
+Relative/local module graphs from a ZIP must be bundled first or mapped to
+hosted HTTPS modules. CSS and native media in the ZIP keep their existing import
+path. For additional classic globals declare `export const f0Cdns =
+['https://example.com/library.umd.js']` or pass the live tool's `cdns` array.
+Never put an ESM module URL in the classic CDN list.
 
 `THREE` is f0's bundled build (0.170). Code written against r128 renders washed
 out and dark there: read `THREE` at mount, and from r152 set `texture.colorSpace =

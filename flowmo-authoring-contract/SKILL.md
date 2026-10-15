@@ -259,3 +259,28 @@ expect the recipient to find the right images themselves.
 - Before launch on WordPress, the CMS handoff list in after-import.md ran on
   the production host: every page's header and footer, 404, titles, plugin
   widgets, and a desktop + phone sweep after each CMS editing session.
+
+
+## External coding agents importing through MCP
+
+An AI coding agent can author and validate the files itself, then call
+`f0_import_website` with the exact `projectId` and an absolute `filePath` to
+its HTML or ZIP. No manual handover or upload is required. ZIPs include all
+HTML pages, referenced CSS, media and optionally DESIGN.md; nested paths are
+resolved before the original editable importer runs. Desktop MCP streams
+ZIP uploads automatically. Hosted MCP accepts inline HTML, small
+`archiveBase64` packages, or the uploaded Flowmo storage `archiveUrl`.
+
+Default `mode:"pages"` adds new pages. For a fragment, use
+`mode:"elements"`, the exact `pageId`, and `targetId`. For a FlowGen native
+website, also supply `nodeId` and its fresh `revision` from
+`read_native_website`. Preserve the linked brand, current source and CMS.
+
+Read returned page/element/code IDs and conversion reports, inspect the
+render at desktop and phone sizes, then repair through the same native MCP
+tools. Unsupported opaque page scripts are refused by default; convert
+stock UI to native interactions and genuinely scripted visuals to scoped
+TSX before importing. `allowOpaqueScripts` is an explicit preserve-code
+opt-out and does not make its scripts native editable interactions.
+DESIGN.md is returned for brand-aware agent review and is not auto-applied.
+Importing does not publish or deploy.

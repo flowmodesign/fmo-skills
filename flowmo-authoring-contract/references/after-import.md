@@ -36,6 +36,13 @@ Run these against the imported project (`f0_invoke` on the editor, or
    slot. Check its box has a height (`get_design_html` then measure, or the
    layout of the sections after it) and that in-page anchors it took over
    still resolve (interactive-code.md, "Placing and sizing").
+   For MCP imports, inspect returned `codeElements` IDs, field schemas and
+   resolved dependencies. Open the native controls (f0 sidebar or FlowGen's
+   **Edit code and controls**), change a declared field and check the rendered
+   result. Keep field names stable on source updates and verify edited values
+   survive. For package-backed elements, verify actual loading and behavior in
+   the editor and preview; successful import or compilation alone is not proof
+   that the CDN module or its React hooks work.
 4. **`validate_canvas`.** It flags broken `var()` references. It also flags f0's
    own `fmod` class on the page root as an error; that one is the importer's,
    not yours.
