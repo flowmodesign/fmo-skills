@@ -34,7 +34,7 @@ authoring contract's validator on the exact final file before delivery.
 3. `f0_get_html` (a specific element id, or the active page) — read what exists before changing it.
 4. `f0_screenshot` — SEE the design when you need to (it uploads + returns an image; it never inlines base64). Screenshot once to verify, then describe — not after every micro-edit.
 5. Apply changes with `f0_invoke` — discover exact tool names + arg schemas via `f0_list_tools`.
-6. Verify once, bounded: one batched visual check with `f0_screenshot` at desktop and at mobile width, list everything wrong in both, fix it all in one batch, then at most one confirming screenshot round. Report anything still open instead of looping - open-ended screenshot-tweak-screenshot cycles burn the turn without converging.
+6. Verify the current revision, bounded: start with a batched visual check with `f0_screenshot` at desktop and at mobile width, list everything wrong in both, fix it all in one batch, then verify the changed revision within the task budget and progress limits. Report anything still open instead of looping - open-ended screenshot-tweak-screenshot cycles burn the turn without converging.
 
 Long generation runs: `flowgen_run_node` and `flowgen_run_nodes_parallel`
 wait for the result, and for slow image or video models the tool call can time
@@ -74,8 +74,8 @@ interactions in Studio - not a baked script; the video master carries per-shot
 timelines. The system's `--ease-*` and `--transition-*` tokens are that motion's
 personality and drive both targets.
 
-## The cornerstone rule (see flowmo-frontend-design)
-flowmo's `ds-*` classes + `var(--token)` design tokens are the **cornerstones** — build every page ON them. You MAY add custom classes/vars, but only as ADDITIVE extensions that compose with `ds-*` and still consume tokens. Never use Tailwind/Bootstrap. Never hardcode a value that has a matching token. Never inline a whole design as hardcoded styles to dodge a tool.
+## Design-system guidance
+Inspect the actual connected brand and design system before authoring. Reuse appropriate tokens/components and permit scoped custom classes, defined tokens and bespoke CSS. The system guides consistency; it does not mandate an accent count, hero recipe, font pairing, effect or visual count. Protect existing shared rules and bindings. Unsupported classes and undefined tokens are technical failures, not creative choices.
 
 ## Classes, not ids
 Every hook is a **class**: CSS rules, GSAP/animation targets, scroll triggers, scope selectors, component classes. Never style or animate through an `id`, and never add an `id` just so a rule or tween can find an element — an id matches one element ever, so it breaks the moment a section is duplicated or a component reused, and the duplicate is invalid HTML. Class rules are also the only ones f0's class-level style tools can edit. Write an `id` only where something must be addressed programmatically and exactly: in-page anchor targets (`href="#pricing"`), form wiring (`<label for>`, `aria-labelledby`, `aria-controls`), and SVG internal references (gradients, `clipPath`, `mask`, `filter`, `<use>`), which have no class equivalent. Those ids carry no styles and no motion.
@@ -84,12 +84,11 @@ Every hook is a **class**: CSS rules, GSAP/animation targets, scroll triggers, s
 - Read narrowly: inspect a specific element (`f0_get_html`/`get_element_context` with an id), not the whole page, unless you truly need the full tree. Avoid `get_canvas_state` with `include_html` unless necessary.
 - Results from `f0_design_system` and `f0_screenshot` are compact by design. Don't re-fetch the design system each turn.
 
-## Model routing (when you orchestrate subagents or pick a model per step)
-- **Mechanical / automatic** work (a known tool sequence, applying a given style, repetitive edits, simple reads) → **Haiku**.
-- **Planning, architecture, and clever/original DESIGN** decisions → **Opus**.
-- **Routine executions** that aren't design-critical → **Sonnet** — escalate to Opus the moment real design judgement is needed.
+## Model routing
+Honor explicit current compatible model preferences. In Auto use JEV task routing from the live capability/pricing catalog; prefer the least-cost model that can meet the task's requirements, and escalate on actual evidence. Show actual dispatched choices and meaningful fallbacks. Manual reasoning-model selections govern applicable reasoning work; image/video/mesh synthesis still uses capability-specific providers. External MCP clients own their conversational model and must not start a duplicate in-app loop.
 
 ## The three craft skills
+- **flowmo-website-performance** — startup policies, hidden media, dependency timing, rendering budgets and exact native-ZIP/browser verification. Use on substantial imports and performance-affecting work; screenshots and quality triage alone do not prove performance.
 - **flowmo-frontend-design** — the design system, which CSS tool to use, building pages/sections.
 - **flowmo-interactive-design** — interactive code elements (React/WebGL/canvas), scope & isolation.
 - **flowmo-motion-design** — GSAP motion (`author_animation`), scroll-scrub/pin, recipes, carousels/tabs/accordions.

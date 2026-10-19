@@ -13,6 +13,14 @@ here was found on a real import.
 
 ## The post-import check
 
+For substantial imports and performance-affecting repairs, also follow
+**flowmo-website-performance**: inspect saved native source, download and hash a
+fresh ZIP, and test that unchanged artifact at desktop/phone and normal/reduced
+motion. Keep postprocessed candidates separate. Use the MCP performance audit
+for supplied-evidence triage; a successful import remains performance-unverified
+until the relevant browser checks exist. Preserve required compatibility helpers
+when investigating duplicate or obsolete scripts.
+
 Run these against the imported project (`f0_invoke` on the editor, or
 `surface: "document"` for a Flowgen document):
 

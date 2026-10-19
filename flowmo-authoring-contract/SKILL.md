@@ -43,6 +43,9 @@ handoff:
   read [references/interactive-code.md](references/interactive-code.md).
 - After the user imports, or when repairing an imported project through the
   MCP, read [references/after-import.md](references/after-import.md).
+- For substantial imports or startup/media/WebGL changes, also use
+  **flowmo-website-performance**. Import validation and a content/design review
+  do not establish loading, scrolling or native-export performance.
 
 ## Choose the import representation first
 

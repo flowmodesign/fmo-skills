@@ -220,6 +220,15 @@ path. For additional classic globals declare `export const f0Cdns =
 ['https://example.com/library.umd.js']` or pass the live tool's `cdns` array.
 Never put an ESM module URL in the classic CDN list.
 
+For delayed startup, **flowmo-website-performance** documents `f0LazyImports`:
+a literal HTTPS URL map used with native `import(url)` at the chosen state.
+Preserve that export alongside the controls and imports. Its declared global
+names/URLs override inferred eager loading; explicit classic CDNs and static
+imports still load before mount. MCP `codeElements` reports lazy URLs separately
+as `lazyImports`. Verify the actual exported request timing, shared module load
+and disposal/failure behavior; declaring a lazy URL does not implement those
+lifecycle decisions.
+
 `THREE` is f0's bundled build (0.170). Code written against r128 renders washed
 out and dark there: read `THREE` at mount, and from r152 set `texture.colorSpace =
 THREE.SRGBColorSpace` and pass colors without `convertSRGBToLinear()`; from r155

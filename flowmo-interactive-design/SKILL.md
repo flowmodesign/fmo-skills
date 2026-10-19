@@ -55,6 +55,14 @@ React is built in. Static npm and HTTPS ESM imports are supported. Pin versions 
 
 Keep import statements, `f0Imports`, `f0Cdns` and literal `f0Fields` in the component source across native f0, FlowGen Code Component output and MCP imports/edits. Do not strip imports to repair compilation. Literal fields let controls appear before package execution. f0's sidebar and FlowGen's **Edit code and controls** popover edit the same native payload; stable field names preserve values across source changes. For HTML/ZIP encoding and import verification, read **flowmo-authoring-contract**'s interactive-code reference.
 
+## Startup and performance
+For expensive startup, hidden media, GPU budgets and disposal, use
+**flowmo-website-performance**. Declare lazy browser ESM URLs with
+`f0LazyImports` and call native `import(url)` at the intended startup state;
+this takes precedence over inferred CDN globals/URLs, while explicitly requested
+classic CDNs and static imports still load before mounting. Verify exported
+dependency timing rather than relying on source appearance.
+
 ## Animatable fields
 `number`/`range`/`color` fields are **animatable** — the editor drives them from the timeline / scroll / hover and mutates `props.fields.<name>` IN PLACE every frame **without re-rendering**. So expose decorative/animatable values (speed, intensity, colors, sizes, angles, opacity) and read them LIVE in your loop as `props.fields.<name> ?? props.<name>`, keeping heavy setup in a `useEffect(…, [])` with EMPTY deps (latest props read through a ref). NEVER list an animatable field in a deps array — it re-runs setup every frame and rebuilds the experience. Don't expose technical/config values (endpoints, keys, ids, selectors). To animate a field, add a keyframe track on it in the Interactions panel.
 
