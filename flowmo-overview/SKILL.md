@@ -28,6 +28,11 @@ replace it with Electron capture, an iframe, a live sandbox, or one opaque scrip
 unless the user explicitly asks for a faithful non-editable embed. Run the
 authoring contract's validator on the exact final file before delivery.
 
+Local previews must use the exact f0 runtime HTML/CSS defaults, available in
+**flowmo-authoring-contract/references/runtime-baseline.md** or `f0_guide` topic
+`mcp-html-baseline`. This floor and its page frame are preview-only and must
+never be imported/persisted as authored CSS or content; f0 supplies them itself.
+
 ## Golden path for any task
 1. `f0_health` — confirm the app is reachable and see open project tabs.
 2. `f0_design_system` — **call this before writing any HTML/CSS.** It returns the cornerstone classes/tokens + the CSS-tool decision table. Call it once and remember it.

@@ -36,6 +36,13 @@ handoff:
 
 - Always read [references/editable-html.md](references/editable-html.md) for the
   HTML/CSS structure, design-system vocabulary, DESIGN.md, and responsive CSS.
+- Before local layout verification, read [references/runtime-baseline.md](references/runtime-baseline.md).
+  It supplies the exact generated Preview/publish default HTML/CSS floor. Use
+  it before project styles, in its own `data-f0-runtime-baseline` style block
+  and `data-f0-authoring-root` page frame. These are preview-only: remove them
+  from the handoff, never import them as project/design-system CSS or content.
+  Keep authored styles and the real semantic page wrapper separate. MCP clients
+  can read the same floor with `f0_guide` topic `mcp-html-baseline`.
 - For any animation, interaction, scroll behavior, timeline, carousel, tabs,
   accordion, or media scrub, also read
   [references/motion-handoff.md](references/motion-handoff.md).

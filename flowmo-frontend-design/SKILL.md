@@ -24,6 +24,13 @@ representation rules. Do not put layout or copy inside JavaScript. If the file
 contains motion, native interactions, or code elements, run the bundled handoff
 validator on the exact final file before delivering it.
 
+For local HTML previews, use the exact generated runtime floor in
+**flowmo-authoring-contract/references/runtime-baseline.md**, or read `f0_guide`
+topic `mcp-html-baseline`. It is the same default CSS and page framing that
+Preview/publish supply. Keep it separate and preview-only; never import or
+persist that floor or its frame through `build`, `update_stylesheet` or a
+design-system handoff. Import only authored content, tokens and custom CSS.
+
 ## Cornerstones, not a cage
 flowmo's `ds-*` classes + `var(--token)` tokens are the **load-bearing foundation**. Build every page on them:
 - **Layout / structure:** `ds-section`, `ds-container`, `ds-grid` (`ds-grid-2/3/4-column`), `ds-flex` (+ `ds-flex-center`/`-between`/`-column`), `ds-gap-*`.

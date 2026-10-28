@@ -70,9 +70,11 @@ Other things worth knowing before you write:
 ## What is already on the page before your CSS runs
 
 A global sheet ships with EVERY preview, export and publish, injected before
-anything you write. Nothing in it uses `!important`, so an ordinary rule of
-yours beats it - but you have to know it is there, because several of its rules
-are the opposite of browser defaults:
+anything you write. For local previews use the exact generated scaffold in
+[runtime-baseline.md](runtime-baseline.md), also served by `f0_guide` topic
+`mcp-html-baseline`. Do not reconstruct a reset from this summary. Some engine
+helpers use `!important` (including page width and free-mode/carousel layout);
+most default rules have low specificity. Several oppose browser defaults:
 
 - **`* { box-sizing: border-box; margin: 0; font-size: inherit; text-decoration:
   none; }`** - no default margins anywhere, and font-size INHERITS rather than
@@ -83,9 +85,10 @@ are the opposite of browser defaults:
   a weight yourself; do not assume the UA default.
 - **`img, video { max-width: unset; object-fit: cover; object-position: center;
   }`** - media fills and crops by default rather than letterboxing.
-- **`input, button, select, textarea`** are stripped to nothing: no border, no
-  outline, transparent background, inherited color, `cursor: pointer` on
-  buttons, no resize on textareas, no native select arrow. Style them with
+- **`input, button`** have no border or outline, a transparent background and
+  inherited color; buttons have `cursor: pointer`. **`select`** has no border or
+  native arrow and a transparent background. **`textarea`** has no border or
+  outline, a transparent background and no resize handle. Style them with
   `ds-input` / `ds-button` or your own rules - there is no UA chrome to remove.
 - **`summary { list-style: none }`** plus the webkit marker removed - the native
   `<details>` triangle is gone, so supply your own chevron.
@@ -111,8 +114,20 @@ are the opposite of browser defaults:
   too, and so does the CSS that makes carousels, tabs and accordions lay out
   (section 6).
 
-So: do not write your own reset, do not re-zero margins, and do not fight these
-with `!important`. Assume a clean slate that is *more* neutral than a browser's.
+Keep the exact floor in its own `<style data-f0-runtime-baseline>` block,
+before project tokens and authored CSS. The scaffold's
+`<div class="f0-page" data-f0-authoring-root>` emulates the runtime page root;
+put the real page design on a separate semantic wrapper inside it. Temporary
+unique `data-f0-id` attributes on content elements make the real per-element
+positioning defaults apply locally. Editable import replaces those IDs.
+
+Remove the marked style block and unwrap the marked frame for the final
+handoff. The importer also omits them defensively. Never put tokens or custom
+styles into the marked block, duplicate the floor into DESIGN.md or a CSS
+file, or submit it through live CSS tools. f0 supplies its current floor at
+render time; storing a copy would freeze old defaults and duplicate helpers
+and animations. Do not write a second reset. Project styles, fonts and ds-*
+definitions remain separate from these runtime defaults.
 
 ---
 
